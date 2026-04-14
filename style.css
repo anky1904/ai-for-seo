@@ -1,31 +1,84 @@
 body{
-font-family:Arial;
-background:#f5f5f5;
+font-family:Arial, sans-serif;
+background:#f4f6fb;
 padding:30px;
 }
 
 .container{
 background:white;
-padding:20px;
-border-radius:8px;
-max-width:800px;
+padding:30px;
+border-radius:10px;
+max-width:1000px;
 margin:auto;
+box-shadow:0 4px 20px rgba(0,0,0,0.08);
+}
+
+h1{
+text-align:center;
+margin-bottom:30px;
 }
 
 input{
 width:100%;
 padding:12px;
-margin:10px 0;
+margin-bottom:15px;
+border-radius:6px;
+border:1px solid #ddd;
 }
 
 button{
 padding:12px 20px;
-background:#0073e6;
+background:#2563eb;
 color:white;
 border:none;
+border-radius:6px;
 cursor:pointer;
+font-weight:600;
 }
 
-#results{
+button:hover{
+background:#1e4fd6;
+}
+
+.card{
+background:#fff;
+padding:20px;
 margin-top:20px;
+border-radius:8px;
+box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+.good{
+color:green;
+font-weight:600;
+}
+
+.warning{
+color:#f59e0b;
+font-weight:600;
+}
+
+.error{
+color:red;
+font-weight:600;
+}
+
+.score{
+font-size:40px;
+font-weight:bold;
+text-align:center;
+margin-bottom:20px;
+}
+
+.progress{
+background:#eee;
+height:10px;
+border-radius:10px;
+overflow:hidden;
+margin-bottom:20px;
+}
+
+.progress-bar{
+height:10px;
+background:green;
 }
