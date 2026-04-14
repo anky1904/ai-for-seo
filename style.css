@@ -5,19 +5,16 @@ margin:0;
 padding:0;
 }
 
-
 .container{
 max-width:1100px;
 margin:auto;
 padding:25px;
 }
 
-
 h1{
-font-size:32px;
+font-size:30px;
 margin-bottom:10px;
 }
-
 
 .author{
 margin-bottom:20px;
@@ -29,36 +26,30 @@ color:#555;
 
 .search-container{
 display:flex;
-gap:12px;
+gap:10px;
 margin-bottom:20px;
 }
 
-
 .search-bar{
 flex:1;
-padding:15px;
+padding:14px;
 font-size:16px;
-border-radius:8px;
+border-radius:6px;
 border:1px solid #ddd;
 }
 
-
 .analyze-btn{
-background:linear-gradient(45deg,#ff416c,#ff4b2b);
+background:#ff4b2b;
 color:white;
 border:none;
-padding:15px 25px;
-border-radius:8px;
+padding:14px 25px;
+border-radius:6px;
 cursor:pointer;
 font-weight:600;
-font-size:15px;
-transition:0.2s;
 }
 
-
 .analyze-btn:hover{
-opacity:0.9;
-transform:scale(1.02);
+background:#ff416c;
 }
 
 
@@ -66,30 +57,21 @@ transform:scale(1.02);
 /* Tabs */
 
 .tabs{
-margin-top:25px;
+margin-top:20px;
 margin-bottom:20px;
 }
 
-
 .tab{
-padding:12px 18px;
+padding:10px 16px;
 border:none;
-border-radius:8px;
-margin-right:8px;
+border-radius:6px;
+margin-right:6px;
 cursor:pointer;
 background:#e5e7eb;
-font-weight:500;
-transition:0.2s;
 }
-
-
-.tab:hover{
-transform:scale(1.04);
-}
-
 
 .tab.active{
-background:linear-gradient(45deg,#3b82f6,#9333ea);
+background:#3b82f6;
 color:white;
 }
 
@@ -100,12 +82,10 @@ color:white;
 .tab-content{
 display:none;
 background:white;
-padding:22px;
-border-radius:10px;
-box-shadow:0 2px 8px rgba(0,0,0,0.08);
-margin-top:15px;
+padding:20px;
+border-radius:8px;
+box-shadow:0 2px 6px rgba(0,0,0,0.08);
 }
-
 
 .tab-content.active{
 display:block;
@@ -113,44 +93,29 @@ display:block;
 
 
 
-/* Cards */
-
-.card{
-background:white;
-padding:20px;
-border-radius:10px;
-box-shadow:0 2px 8px rgba(0,0,0,0.08);
-}
-
-
-
-/* SEO Score */
+/* Score */
 
 .score-wrapper{
 text-align:center;
-margin:25px 0;
+margin:20px 0;
 }
-
 
 .score-card{
 display:inline-block;
-padding:25px 35px;
+padding:20px 30px;
 background:white;
-border-radius:12px;
-box-shadow:0 2px 8px rgba(0,0,0,0.1);
+border-radius:10px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
-
 
 .score-number{
-font-size:40px;
-font-weight:700;
+font-size:34px;
 color:#3b82f6;
+font-weight:bold;
 }
-
 
 .score-text{
 color:#666;
-margin-top:5px;
 }
 
 
@@ -161,136 +126,65 @@ margin-top:5px;
 margin-top:8px;
 font-size:14px;
 display:flex;
-gap:25px;
-margin-bottom:15px;
+gap:20px;
 }
-
 
 .red{
-color:#e11d48;
+color:red;
 font-weight:600;
 }
-
 
 .green{
-color:#16a34a;
+color:green;
 font-weight:600;
 }
 
 
-.char-warning{
+
+/* Table */
+
+table{
+width:100%;
+margin-top:15px;
+}
+
+th{
+text-align:left;
+padding:8px;
+}
+
+td{
+padding:8px;
+border-bottom:1px solid #eee;
+}
+
+
+
+/* Missing Alt */
+
+.alt-error{
 color:red;
 font-weight:600;
 }
 
 
 
-/* Tables */
+/* Suggestions */
 
-table{
-width:100%;
-margin-top:15px;
-border-collapse:collapse;
+.suggestion{
+padding:15px;
+margin-bottom:12px;
+border-radius:8px;
+background:#f9fafb;
+border-left:4px solid #3b82f6;
 }
 
-
-th{
-text-align:left;
-padding:10px;
-background:#f3f4f6;
+.suggestion.high{
+border-left:4px solid red;
 }
 
-
-td{
-padding:10px;
-border-bottom:1px solid #eee;
-vertical-align:top;
-word-break:break-word;
-}
-
-
-
-/* ALT Error */
-
-.alt-error{
-color:#e11d48;
-font-weight:600;
-margin-bottom:10px;
-}
-
-
-
-/* Suggestion Cards */
-
-.suggestion-card{
-background:#fff;
-padding:20px;
-margin-bottom:15px;
-border-radius:10px;
-box-shadow:0 2px 8px rgba(0,0,0,0.08);
-border-left:5px solid #ccc;
-}
-
-
-.suggestion-high{
-border-left:5px solid #ef4444;
-}
-
-
-.suggestion-medium{
-border-left:5px solid #f59e0b;
-}
-
-
-.suggestion-low{
-border-left:5px solid #3b82f6;
-}
-
-
-.suggestion-title{
-font-size:18px;
-font-weight:600;
-margin-bottom:8px;
-}
-
-
-.suggestion-impact{
-font-size:13px;
-margin-top:10px;
-color:#666;
-}
-
-
-.suggestion-fix{
-margin-top:10px;
-font-size:14px;
-}
-
-
-.priority-badge{
-display:inline-block;
-padding:4px 10px;
-border-radius:20px;
-font-size:12px;
-margin-bottom:10px;
-}
-
-
-.high{
-background:#ffeaea;
-color:#ef4444;
-}
-
-
-.medium{
-background:#fff7e6;
-color:#f59e0b;
-}
-
-
-.low{
-background:#e6f4ff;
-color:#3b82f6;
+.suggestion.medium{
+border-left:4px solid orange;
 }
 
 
@@ -302,28 +196,10 @@ color:#2563eb;
 font-weight:600;
 }
 
-
 .h2{
 color:#9333ea;
-font-weight:500;
 }
-
 
 .h3{
 color:#555;
-}
-
-
-.h4{
-color:#777;
-}
-
-
-
-/* Footer */
-
-footer{
-text-align:center;
-margin-top:30px;
-color:#777;
 }
