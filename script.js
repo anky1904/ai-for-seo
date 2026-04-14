@@ -18,7 +18,7 @@ displayResults(data);
 } catch(error){
 
 document.getElementById("results").innerHTML = 
-"<p>Error fetching page. Some websites block external requests.</p>";
+"<p>Error fetching page.</p>";
 
 }
 
@@ -26,17 +26,45 @@ document.getElementById("results").innerHTML =
 
 function displayResults(data){
 
+const titleLength = data.title ? data.title.length : 0;
+const metaLength = data.meta ? data.meta.length : 0;
+
+const titleColor = titleLength > 70 ? "red" : "green";
+const metaColor = metaLength > 160 ? "red" : "green";
+
 document.getElementById("results").innerHTML = `
 
-<h2>SEO Report</h2>
+<h2>SEO Audit Report</h2>
 
-<p><strong>Title:</strong> ${data.title || "Missing"}</p>
-<p><strong>Meta Description:</strong> ${data.meta || "Missing"}</p>
+<h3>Meta Title</h3>
+<p style="color:${titleColor}">
+${data.title || "Missing"} 
+<br>
+Characters: ${titleLength}/70
+</p>
 
-<p><strong>H1 Count:</strong> ${data.h1}</p>
-<p><strong>H2 Count:</strong> ${data.h2}</p>
+<h3>Meta Description</h3>
+<p style="color:${metaColor}">
+${data.meta || "Missing"}
+<br>
+Characters: ${metaLength}/160
+</p>
 
-<p><strong>Images:</strong> ${data.images}</p>
+<h3>Heading Structure</h3>
+
+<p><strong>H1:</strong> ${data.h1Count}</p>
+<ul>${data.h1List}</ul>
+
+<p><strong>H2:</strong> ${data.h2Count}</p>
+<ul>${data.h2List}</ul>
+
+<p><strong>H3:</strong> ${data.h3Count}</p>
+<ul>${data.h3List}</ul>
+
+<h3>SEO Suggestions</h3>
+<ul>
+${data.suggestions}
+</ul>
 
 `;
 
