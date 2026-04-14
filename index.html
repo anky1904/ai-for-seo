@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>AI SEO Tool - Ankush Sable</title>
 
 <link rel="stylesheet" href="style.css">
@@ -15,17 +16,25 @@
 <div class="container">
 
 <div class="branding-header">
+
 <h1>AI SEO On-Page Optimization Tool</h1>
-<p>Created by <strong>Ankush Sable</strong> | Digital Marketing & SEO Expert</p>
+
+<p>
+Created by 
+<span class="branding-name">Ankush Sable</span> 
+| Digital Marketing & SEO Expert
+</p>
+
 </div>
 
 <input 
 type="text" 
 id="urlInput" 
 placeholder="Enter Website URL"
->
+/>
 
-<button onclick="analyzeSEO()">Analyze SEO</button>
+<button id="analyzeBtn">Analyze SEO</button>
+
 
 <div class="tabs">
 
@@ -37,20 +46,31 @@ placeholder="Enter Website URL"
 
 </div>
 
+
 <div id="summary" class="tab-content active"></div>
 <div id="headers" class="tab-content"></div>
 <div id="images" class="tab-content"></div>
 <div id="links" class="tab-content"></div>
 <div id="speed" class="tab-content"></div>
 
+
 <div class="footer">
-Tool Created by Ankush Sable | Digital Marketing & SEO Expert
+
+Tool Created by  
+<span class="branding-name">Ankush Sable</span>  
+Digital Marketing & SEO Expert
+
 </div>
 
 </div>
+
 
 <script src="seo-analyzer.js"></script>
 <script src="script.js"></script>
+
+<script>
+document.getElementById("analyzeBtn").addEventListener("click", analyzeSEO);
+</script>
 
 </body>
 
