@@ -33,20 +33,27 @@ function displayResults(data){
 document.getElementById("summary").innerHTML=`
 
 <div class="score-card">
-
 SEO Score
-
 <div class="score-number">${data.score}</div>
-
 </div>
 
 <div class="card">
 
 <h3>Meta Title</h3>
-<p>${data.title}</p>
+
+<p>${data.titleHighlighted}</p>
+
+<p class="${data.titleLength>70?'char-warning':'char-ok'}">
+${data.titleLength}/70
+</p>
 
 <h3>Meta Description</h3>
-<p>${data.meta}</p>
+
+<p>${data.metaHighlighted}</p>
+
+<p class="${data.metaLength>160?'char-warning':'char-ok'}">
+${data.metaLength}/160
+</p>
 
 </div>
 
@@ -74,8 +81,8 @@ document.getElementById("images").innerHTML=`
 
 <p>Total Images: ${data.imageCount}</p>
 
-<p class="error">
-⚠ Missing ALT: ${data.imagesMissingAlt} (Urgent Fix Required)
+<p class="alt-error">
+Missing ALT Text: ${data.imagesMissingAlt}
 </p>
 
 <table>
