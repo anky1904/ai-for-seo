@@ -18,7 +18,7 @@ id="urlInput"
 placeholder="Enter Website URL"
 >
 
-<button onclick="analyzeSEO()">Analyze SEO</button>
+<button id="analyzeBtn">Analyze SEO</button>
 
 <div id="results"></div>
 
@@ -26,6 +26,10 @@ placeholder="Enter Website URL"
 
 <script src="seo-analyzer.js"></script>
 <script src="script.js"></script>
+
+<script>
+document.getElementById("analyzeBtn").addEventListener("click", analyzeSEO);
+</script>
 
 </body>
 </html>
