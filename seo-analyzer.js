@@ -32,7 +32,6 @@ const meta=doc.querySelector('meta[name="description"]')?.content || "Missing"
 const titleLength=title.length
 const metaLength=meta.length
 
-
 if(titleLength>70) score-=10
 if(metaLength>160) score-=10
 
@@ -41,10 +40,7 @@ const h1=doc.querySelectorAll("h1")
 const h2=doc.querySelectorAll("h2")
 const h3=doc.querySelectorAll("h3")
 
-
-if(h1.length==0) score-=15
-if(h1.length>1) score-=10
-
+if(h1.length==0) score-=10
 
 let h1List=""
 let h2List=""
@@ -63,8 +59,24 @@ let imagesMissingAltList=""
 images.forEach(img=>{
 
 if(!img.getAttribute("alt")){
+
 imagesMissingAlt++
-imagesMissingAltList+=`<li>${img.src}</li>`
+
+const src=img.src
+
+let suggestedAlt=src.split("/").pop()
+suggestedAlt=suggestedAlt.replace(/[-_]/g," ")
+suggestedAlt=suggestedAlt.split(".")[0]
+
+imagesMissingAltList+=`
+
+<tr>
+<td>${src}</td>
+<td>${suggestedAlt}</td>
+</tr>
+
+`
+
 }
 
 })
