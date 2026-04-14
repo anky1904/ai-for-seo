@@ -27,20 +27,11 @@ async function analyzePage(doc,url){
 let score=100
 
 
-// META
-
 const title=doc.querySelector("title")?.innerText || "Missing"
 const meta=doc.querySelector('meta[name="description"]')?.content || "Missing"
 
-const titleLength=title.length
-const metaLength=meta.length
 
-if(titleLength>70) score-=10
-if(metaLength>160) score-=10
-
-
-
-// HEADING STRUCTURE
+// Headings exact structure
 
 const headings=doc.querySelectorAll("h1,h2,h3,h4,h5,h6")
 
@@ -49,14 +40,16 @@ let headingStructure=""
 headings.forEach(tag=>{
 
 headingStructure+=`
-<p><strong>${tag.tagName}</strong> : ${tag.innerText}</p>
+<p class="${tag.tagName.toLowerCase()}">
+${tag.tagName} : ${tag.innerText}
+</p>
 `
 
 })
 
 
 
-// IMAGES
+// Images
 
 const images=doc.querySelectorAll("img")
 
@@ -69,13 +62,15 @@ if(!img.alt){
 
 imagesMissingAlt++
 
-let name=img.src.split("/").pop().split(".")[0]
+let alt=img.src.split("/").pop().split(".")[0]
 
 imagesMissingAltList+=`
+
 <tr>
 <td>${img.src}</td>
-<td>${name.replace(/[-_]/g," ")}</td>
+<td>${alt.replace(/[-_]/g," ")}</td>
 </tr>
+
 `
 
 }
@@ -85,8 +80,7 @@ imagesMissingAltList+=`
 if(imagesMissingAlt>0) score-=10
 
 
-
-// LINKS
+// Links
 
 const links=doc.querySelectorAll("a")
 
@@ -109,48 +103,33 @@ externalLinks++
 
 
 
-// TECHNICAL
+// Technical
 
 const canonical=doc.querySelector("link[rel='canonical']")?.href || "Missing"
-
 const robots=doc.querySelector("meta[name='robots']")?.content || "Missing"
-
-const schema=doc.querySelector("script[type='application/ld+json']")
-? "Present"
-: "Missing"
-
+const schema=doc.querySelector("script[type='application/ld+json']") ? "Present" : "Missing"
 
 
 let sitemap="Missing"
 
 try{
-
 const map=await fetch(url+"/sitemap.xml")
-
 if(map.status==200) sitemap="Present"
-
 }catch{}
 
 
+// Score
 
-// SCORING
-
-if(!canonical || canonical=="Missing") score-=5
-if(!robots || robots=="Missing") score-=5
+if(canonical=="Missing") score-=5
+if(robots=="Missing") score-=5
 if(schema=="Missing") score-=5
-
-if(score<0) score=0
 
 
 return{
 
 score,
-
 title,
 meta,
-
-titleLength,
-metaLength,
 
 headingStructure,
 
