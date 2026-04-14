@@ -32,9 +32,18 @@ function displayResults(data){
 
 document.getElementById("summary").innerHTML=`
 
+<div class="score-wrapper">
+
 <div class="score-card">
-SEO Score
-<div class="score-number">${data.score}</div>
+
+<div class="score-number">${data.score}/100</div>
+
+<div class="score-text">
+Overall SEO Score
+</div>
+
+</div>
+
 </div>
 
 <div class="card">
@@ -44,15 +53,16 @@ SEO Score
 <p>${data.titleHighlighted}</p>
 
 <p class="${data.titleLength>70?'char-warning':'char-ok'}">
-${data.titleLength}/70
+${data.titleLength}/70 characters
 </p>
+
 
 <h3>Meta Description</h3>
 
 <p>${data.metaHighlighted}</p>
 
 <p class="${data.metaLength>160?'char-warning':'char-ok'}">
-${data.metaLength}/160
+${data.metaLength}/160 characters
 </p>
 
 </div>
@@ -88,7 +98,7 @@ Missing ALT Text: ${data.imagesMissingAlt}
 <table>
 
 <tr>
-<th>Image</th>
+<th>Image URL</th>
 <th>Suggested ALT</th>
 </tr>
 
