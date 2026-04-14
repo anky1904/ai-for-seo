@@ -1,11 +1,12 @@
 async function fetchHTML(url){
 
-const proxy = "https://api.allorigins.win/get?url=";
+const proxy = "https://api.allorigins.win/raw?url=";
 
 const response = await fetch(proxy + encodeURIComponent(url));
-const data = await response.json();
 
-return data.contents;
+const text = await response.text();
+
+return text;
 
 }
 
