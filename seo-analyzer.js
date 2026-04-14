@@ -22,55 +22,60 @@ return parser.parseFromString(html, "text/html");
 
 function analyzePage(doc){
 
-const title = doc.querySelector("title")?.innerText;
-const meta = doc.querySelector('meta[name="description"]')?.content;
+const title = doc.querySelector("title")?.innerText || "Missing";
+const meta = doc.querySelector('meta[name="description"]')?.content || "Missing";
+
+const titleLength = title.length;
+const metaLength = meta.length;
 
 const h1 = doc.querySelectorAll("h1");
 const h2 = doc.querySelectorAll("h2");
 const h3 = doc.querySelectorAll("h3");
 
-let h1List = "";
-let h2List = "";
-let h3List = "";
+let h1List="";
+let h2List="";
+let h3List="";
 
-h1.forEach(el => h1List += `<li>${el.innerText}</li>`);
-h2.forEach(el => h2List += `<li>${el.innerText}</li>`);
-h3.forEach(el => h3List += `<li>${el.innerText}</li>`);
+h1.forEach(el=> h1List += `<li>${el.innerText}</li>`);
+h2.forEach(el=> h2List += `<li>${el.innerText}</li>`);
+h3.forEach(el=> h3List += `<li>${el.innerText}</li>`);
 
-let suggestions = "";
+let suggestions="";
 
-if(!title){
-suggestions += "<li>Missing Meta Title</li>";
-}
+const titleMissing = title === "Missing";
+const titleLong = titleLength > 70;
 
-if(title && title.length > 70){
-suggestions += "<li>Meta title too long</li>";
-}
+const metaMissing = meta === "Missing";
+const metaLong = metaLength > 160;
 
-if(!meta){
-suggestions += "<li>Missing meta description</li>";
-}
+const h1Missing = h1.length === 0;
+const multipleH1 = h1.length > 1;
 
-if(meta && meta.length > 160){
-suggestions += "<li>Meta description too long</li>";
-}
-
-if(h1.length === 0){
-suggestions += "<li>Missing H1 tag</li>";
-}
-
-if(h1.length > 1){
-suggestions += "<li>Multiple H1 tags found</li>";
-}
+if(titleMissing) suggestions += "<li>Missing Meta Title</li>";
+if(titleLong) suggestions += "<li>Meta Title too long</li>";
+if(metaMissing) suggestions += "<li>Missing Meta Description</li>";
+if(metaLong) suggestions += "<li>Meta Description too long</li>";
+if(h1Missing) suggestions += "<li>Missing H1</li>";
+if(multipleH1) suggestions += "<li>Multiple H1 tags</li>";
 
 return {
 
 title,
 meta,
 
-h1Count: h1.length,
-h2Count: h2.length,
-h3Count: h3.length,
+titleLength,
+metaLength,
+
+titleMissing,
+titleLong,
+metaMissing,
+metaLong,
+h1Missing,
+multipleH1,
+
+h1Count:h1.length,
+h2Count:h2.length,
+h3Count:h3.length,
 
 h1List,
 h2List,
