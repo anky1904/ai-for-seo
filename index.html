@@ -1,176 +1,99 @@
-function openTab(evt, tabName){
+<!DOCTYPE html>
+<html lang="en">
 
-const tabs=document.querySelectorAll(".tab")
-const contents=document.querySelectorAll(".tab-content")
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-tabs.forEach(tab=>{
-tab.classList.remove("active")
-})
+<title>AI SEO Website Analyzer</title>
 
-contents.forEach(content=>{
-content.style.display="none"
-})
+<link rel="stylesheet" href="style.css">
 
-document.getElementById(tabName).style.display="block"
+</head>
 
-if(evt){
-evt.currentTarget.classList.add("active")
-}
+<body>
 
-}
+<div class="container">
 
+<h1>AI SEO Website Analyzer</h1>
 
-async function analyzeSEO(){
-
-const url=document.getElementById("urlInput").value
-
-if(!url){
-alert("Enter Website URL")
-return
-}
-
-const html=await fetchHTML(url)
-const doc=parseHTML(html)
-
-const data=await analyzePage(doc,url)
-
-displayResults(data)
-
-document.querySelectorAll(".tab").forEach(tab=>{
-tab.classList.remove("active")
-})
-
-document.querySelector(".tab").classList.add("active")
-
-document.querySelectorAll(".tab-content").forEach(content=>{
-content.style.display="none"
-})
-
-document.getElementById("meta").style.display="block"
-
-}
-
-
-function displayResults(data){
-
-document.getElementById("seoScore").innerHTML=`
-
-<div class="score-wrapper">
-
-<div class="score-card">
-
-<div class="score-number">${data.score}/100</div>
-
-<div class="score-text">
-Overall SEO Score
-</div>
-
-</div>
-
-</div>
-
-`
-
-
-document.getElementById("meta").innerHTML=`
-
-<div class="card">
-
-<h3>Meta Title</h3>
-
-<p>${data.titleHighlighted}</p>
-
-<p>${data.titleLength}/70</p>
-
-<h3>Meta Description</h3>
-
-<p>${data.metaHighlighted}</p>
-
-<p>${data.metaLength}/160</p>
-
-</div>
-
-`
-
-
-document.getElementById("headers").innerHTML=`
-
-<div class="card">
-
-<h3>Heading Structure</h3>
-
-${data.headingStructure}
-
-</div>
-
-`
-
-
-document.getElementById("images").innerHTML=`
-
-<div class="card">
-
-<h3>Images</h3>
-
-<p>Total Images: ${data.imageCount}</p>
-
-<p class="alt-error">
-Missing ALT: ${data.imagesMissingAlt}
+<p class="author">
+Created by 
+<a href="https://www.linkedin.com/in/ankush-sable-6b903480/" target="_blank">
+Ankush Sable
+</a>
+| Digital Marketing & SEO Expert
 </p>
 
-<table>
 
-<tr>
-<th>Image</th>
-<th>Suggested ALT</th>
-</tr>
+<div class="search-container">
 
-${data.imagesMissingAltList}
+<input 
+type="text"
+id="urlInput"
+placeholder="Enter Website URL"
+class="search-bar"
+/>
 
-</table>
-
-</div>
-
-`
-
-
-document.getElementById("links").innerHTML=`
-
-<div class="card">
-
-<p>Total Links: ${data.totalLinks}</p>
-<p>Internal Links: ${data.internalLinks}</p>
-<p>External Links: ${data.externalLinks}</p>
+<button id="analyzeBtn" class="analyze-btn">
+Analyze Website
+</button>
 
 </div>
 
-`
+
+<div id="seoScore"></div>
 
 
-document.getElementById("technical").innerHTML=`
+<div class="tabs">
 
-<div class="card">
+<button class="tab active" onclick="openTab(event,'meta')">
+Meta Title / Description
+</button>
 
-<p>Canonical: ${data.canonical}</p>
-<p>Robots: ${data.robots}</p>
-<p>Schema: ${data.schema}</p>
-<p>Sitemap: ${data.sitemap}</p>
+<button class="tab" onclick="openTab(event,'headers')">
+Headers
+</button>
+
+<button class="tab" onclick="openTab(event,'images')">
+Images
+</button>
+
+<button class="tab" onclick="openTab(event,'links')">
+Links
+</button>
+
+<button class="tab" onclick="openTab(event,'technical')">
+Technical
+</button>
+
+<button class="tab" onclick="openTab(event,'suggestions')">
+SEO Suggestions
+</button>
 
 </div>
 
-`
 
+<div class="tab-wrapper">
 
-document.getElementById("suggestions").innerHTML=`
-
-<div class="card">
-
-<h3>SEO Suggestions</h3>
-
-${data.suggestions}
+<div id="meta" class="tab-content active"></div>
+<div id="headers" class="tab-content"></div>
+<div id="images" class="tab-content"></div>
+<div id="links" class="tab-content"></div>
+<div id="technical" class="tab-content"></div>
+<div id="suggestions" class="tab-content"></div>
 
 </div>
 
-`
+</div>
 
-}
+<script src="seo-analyzer.js"></script>
+<script src="script.js"></script>
+
+<script>
+document.getElementById("analyzeBtn").addEventListener("click", analyzeSEO);
+</script>
+
+</body>
+
+</html>
