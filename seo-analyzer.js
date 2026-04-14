@@ -1,12 +1,16 @@
 async function fetchHTML(url){
 
-const proxy = "https://api.allorigins.win/raw?url=";
+if(!url.startsWith("http")){
+url = "https://" + url;
+}
+
+const proxy = "https://corsproxy.io/?";
 
 const response = await fetch(proxy + encodeURIComponent(url));
 
-const text = await response.text();
+const html = await response.text();
 
-return text;
+return html;
 
 }
 
