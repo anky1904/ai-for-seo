@@ -1,6 +1,34 @@
-function displayResults(data){
+function openTab(evt, tabName){
 
-/* SCORE */
+document.querySelectorAll(".tab-content").forEach(tab=>{
+tab.style.display="none"
+})
+
+document.querySelectorAll(".tab").forEach(btn=>{
+btn.classList.remove("active")
+})
+
+document.getElementById(tabName).style.display="block"
+evt.currentTarget.classList.add("active")
+
+}
+
+
+async function analyzeSEO(){
+
+const url=document.getElementById("urlInput").value
+
+const html=await fetchHTML(url)
+const doc=parseHTML(html)
+
+const data=await analyzePage(doc,url)
+
+displayResults(data)
+
+}
+
+
+function displayResults(data){
 
 document.getElementById("seoScore").innerHTML=`
 
@@ -21,8 +49,6 @@ Overall SEO Score
 `
 
 
-/* META */
-
 document.getElementById("meta").innerHTML=`
 
 <div class="card">
@@ -34,6 +60,7 @@ document.getElementById("meta").innerHTML=`
 <p class="${data.titleLength>70?'char-warning':'char-ok'}">
 ${data.titleLength}/70 characters
 </p>
+
 
 <h3>Meta Description</h3>
 
@@ -48,8 +75,6 @@ ${data.metaLength}/160 characters
 `
 
 
-/* HEADERS */
-
 document.getElementById("headers").innerHTML=`
 
 <div class="card">
@@ -62,8 +87,6 @@ ${data.headingStructure}
 
 `
 
-
-/* IMAGES */
 
 document.getElementById("images").innerHTML=`
 
@@ -93,8 +116,6 @@ ${data.imagesMissingAltList}
 `
 
 
-/* LINKS */
-
 document.getElementById("links").innerHTML=`
 
 <div class="card">
@@ -109,8 +130,6 @@ document.getElementById("links").innerHTML=`
 
 `
 
-
-/* TECHNICAL */
 
 document.getElementById("technical").innerHTML=`
 
@@ -128,13 +147,11 @@ document.getElementById("technical").innerHTML=`
 `
 
 
-/* SEO SUGGESTIONS */
-
 document.getElementById("suggestions").innerHTML=`
 
 <div class="card">
 
-<h3>SEO Recommendations to Reach Score 100</h3>
+<h3>SEO Suggestions to Reach 100 Score</h3>
 
 ${data.suggestions}
 
