@@ -28,7 +28,29 @@ let score=100
 let suggestions=""
 
 
-/* META TITLE */
+/* PAGE TYPE DETECTION */
+
+let pageType="General"
+
+const schemaScript=doc.querySelector('script[type="application/ld+json"]')
+
+if(schemaScript){
+
+const schemaText=schemaScript.innerText
+
+if(schemaText.includes("Product")){
+pageType="Product"
+}
+
+if(schemaText.includes("Article")){
+pageType="Blog"
+}
+
+}
+
+
+
+/* META */
 
 const title=doc.querySelector("title")?.innerText || "Missing"
 const meta=doc.querySelector('meta[name="description"]')?.content || "Missing"
@@ -36,17 +58,11 @@ const meta=doc.querySelector('meta[name="description"]')?.content || "Missing"
 const titleLength=title.length
 const metaLength=meta.length
 
-
 let titleHighlighted=title
 let metaHighlighted=meta
 
 
 if(titleLength>70){
-
-titleHighlighted=title.substring(0,70)+
-`<span class="char-warning">`+
-title.substring(70)+
-`</span>`
 
 score-=10
 
@@ -54,7 +70,7 @@ suggestions+=`
 
 <div class="suggestion high">
 <h4>Meta Title Too Long</h4>
-<p>Reduce meta title under 70 characters to prevent truncation in SERP.</p>
+<p>Reduce meta title under 70 characters to prevent truncation.</p>
 </div>
 
 `
@@ -62,15 +78,13 @@ suggestions+=`
 }
 
 
-if(titleLength<30){
-
-score-=5
+if(!title.toLowerCase().includes("|")){
 
 suggestions+=`
 
 <div class="suggestion medium">
-<h4>Meta Title Too Short</h4>
-<p>Increase title length and include primary keyword.</p>
+<h4>Brand Missing in Title</h4>
+<p>Add brand name in title to improve CTR.</p>
 </div>
 
 `
@@ -80,62 +94,43 @@ suggestions+=`
 
 /* META DESCRIPTION */
 
-if(metaLength>160){
-
-metaHighlighted=meta.substring(0,160)+
-`<span class="char-warning">`+
-meta.substring(160)+
-`</span>`
-
-score-=10
+if(metaLength<120){
 
 suggestions+=`
 
-<div class="suggestion high">
-<h4>Meta Description Too Long</h4>
-<p>Keep description under 160 characters for better CTR.</p>
+<div class="suggestion medium">
+<h4>Meta Description Too Short</h4>
+<p>Increase description to 140–160 characters.</p>
 </div>
 
 `
 
-}
-
-
-if(meta=="Missing"){
-
-score-=15
-
-suggestions+=`
-
-<div class="suggestion high">
-<h4>Meta Description Missing</h4>
-<p>Add compelling description to improve CTR.</p>
-</div>
-
-`
+score-=5
 
 }
 
 
 /* HEADINGS */
 
-const headings=doc.querySelectorAll("h1,h2,h3,h4")
+const headings=doc.querySelectorAll("h1,h2,h3")
 
 let headingStructure=""
 let h1Count=doc.querySelectorAll("h1").length
 
-let firstHeading=headings[0]?.tagName
+const firstHeading=headings[0]?.tagName
 
 headings.forEach(tag=>{
+
 headingStructure+=`
 <p class="${tag.tagName.toLowerCase()}">
-${tag.tagName} : ${tag.innerText}
+${tag.tagName}: ${tag.innerText}
 </p>
 `
+
 })
 
 
-if(firstHeading!=="H1"){
+if(firstHeading!="H1"){
 
 score-=10
 
@@ -144,22 +139,6 @@ suggestions+=`
 <div class="suggestion high">
 <h4>Heading Structure Issue</h4>
 <p>Page starts with ${firstHeading}. H1 should appear first.</p>
-</div>
-
-`
-
-}
-
-
-if(h1Count>1){
-
-score-=5
-
-suggestions+=`
-
-<div class="suggestion medium">
-<h4>Multiple H1 Tags</h4>
-<p>Use only one H1 tag.</p>
 </div>
 
 `
@@ -179,12 +158,13 @@ suggestions+=`
 
 <div class="suggestion medium">
 <h4>Thin Content</h4>
-<p>Increase content depth to 1500+ words.</p>
+<p>Increase content depth for better ranking.</p>
 </div>
 
 `
 
 }
+
 
 
 /* IMAGES */
@@ -199,17 +179,6 @@ images.forEach(img=>{
 if(!img.alt){
 
 imagesMissingAlt++
-
-let name=img.src.split("/").pop().split(".")[0]
-
-imagesMissingAltList+=`
-
-<tr>
-<td>${img.src}</td>
-<td>${name.replace(/[-_]/g," ")}</td>
-</tr>
-
-`
 
 }
 
@@ -232,12 +201,12 @@ suggestions+=`
 }
 
 
+
 /* LINKS */
 
 const links=doc.querySelectorAll("a")
 
 let internalLinks=0
-let externalLinks=0
 
 links.forEach(link=>{
 
@@ -247,8 +216,6 @@ if(!href) return
 
 if(href.startsWith("/") || href.includes(url)){
 internalLinks++
-}else{
-externalLinks++
 }
 
 })
@@ -262,7 +229,7 @@ suggestions+=`
 
 <div class="suggestion medium">
 <h4>Low Internal Linking</h4>
-<p>Add internal links to improve crawlability.</p>
+<p>Add more internal links.</p>
 </div>
 
 `
@@ -270,12 +237,79 @@ suggestions+=`
 }
 
 
+
+/* PRODUCT PAGE SUGGESTIONS */
+
+if(pageType=="Product"){
+
+const reviewCheck=doc.body.innerText.toLowerCase().includes("review")
+
+if(!reviewCheck){
+
+suggestions+=`
+
+<div class="suggestion high">
+<h4>Product Reviews Missing</h4>
+<p>Add customer reviews to improve ranking.</p>
+</div>
+
+`
+
+score-=5
+
+}
+
+
+const faqCheck=doc.body.innerText.toLowerCase().includes("faq")
+
+if(!faqCheck){
+
+suggestions+=`
+
+<div class="suggestion medium">
+<h4>FAQ Section Missing</h4>
+<p>Add FAQ for long-tail keywords.</p>
+</div>
+
+`
+
+score-=5
+
+}
+
+
+}
+
+
+
+/* BLOG PAGE SUGGESTIONS */
+
+if(pageType=="Blog"){
+
+const tocCheck=doc.body.innerText.toLowerCase().includes("table of contents")
+
+if(!tocCheck){
+
+suggestions+=`
+
+<div class="suggestion medium">
+<h4>Table of Contents Missing</h4>
+<p>Add TOC to improve UX.</p>
+</div>
+
+`
+
+score-=5
+
+}
+
+}
+
+
+
 /* TECHNICAL */
 
 const canonical=doc.querySelector("link[rel='canonical']")?.href || "Missing"
-const robots=doc.querySelector("meta[name='robots']")?.content || "Missing"
-const schema=doc.querySelector("script[type='application/ld+json']") ? "Present" : "Missing"
-
 
 if(canonical=="Missing"){
 
@@ -285,39 +319,7 @@ suggestions+=`
 
 <div class="suggestion high">
 <h4>Canonical Missing</h4>
-<p>Add canonical tag to prevent duplicate content.</p>
-</div>
-
-`
-
-}
-
-
-if(schema=="Missing"){
-
-score-=5
-
-suggestions+=`
-
-<div class="suggestion medium">
-<h4>Schema Missing</h4>
-<p>Add schema markup for better SERP.</p>
-</div>
-
-`
-
-}
-
-
-if(robots=="Missing"){
-
-score-=5
-
-suggestions+=`
-
-<div class="suggestion medium">
-<h4>Robots Meta Missing</h4>
-<p>Add robots meta tag.</p>
+<p>Add canonical tag.</p>
 </div>
 
 `
@@ -342,15 +344,11 @@ headingStructure,
 
 imageCount:images.length,
 imagesMissingAlt,
-imagesMissingAltList,
 
 totalLinks:links.length,
 internalLinks,
-externalLinks,
 
 canonical,
-robots,
-schema,
 
 suggestions
 
