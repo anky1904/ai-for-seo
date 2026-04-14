@@ -1,92 +1,128 @@
-async function analyzeSEO() {
+function openTab(evt, tabName){
 
-const url = document.getElementById("urlInput").value;
+document.querySelectorAll(".tab-content").forEach(tab=>{
+tab.classList.remove("active")
+})
 
-if(!url){
-alert("Enter URL");
-return;
-}
+document.querySelectorAll(".tab").forEach(btn=>{
+btn.classList.remove("active")
+})
 
-const html = await fetchHTML(url);
-const doc = parseHTML(html);
-const data = analyzePage(doc);
-
-displayResults(data);
+document.getElementById(tabName).classList.add("active")
+evt.currentTarget.classList.add("active")
 
 }
+
+
+async function analyzeSEO(){
+
+const url = document.getElementById("urlInput").value
+
+const html = await fetchHTML(url)
+const doc = parseHTML(html)
+
+const data = analyzePage(doc)
+
+displayResults(data)
+
+}
+
 
 function displayResults(data){
 
-let score = 100;
-
-if(data.titleMissing) score -= 15;
-if(data.titleLong) score -= 10;
-if(data.metaMissing) score -= 15;
-if(data.metaLong) score -= 10;
-if(data.h1Missing) score -= 15;
-if(data.multipleH1) score -= 10;
-
-if(score < 0) score = 0;
-
-document.getElementById("results").innerHTML = `
+document.getElementById("summary").innerHTML = `
 
 <div class="card">
 
-<div class="score">SEO Score: ${score}/100</div>
+<h3>Meta Title</h3>
+<p>${data.title}</p>
 
-<div class="progress">
-<div class="progress-bar" style="width:${score}%"></div>
-</div>
-
-</div>
-
-<div class="card">
-
-<h2>Meta Title</h2>
-
-<p class="${data.titleLong ? 'error':'good'}">
-${data.title}
+<p class="${data.titleLength>70?'error':'good'}">
+${data.titleLength}/70 Characters
 </p>
 
-<p>Characters: ${data.titleLength}/70</p>
+<h3>Meta Description</h3>
 
-</div>
+<p>${data.meta}</p>
 
-<div class="card">
-
-<h2>Meta Description</h2>
-
-<p class="${data.metaLong ? 'error':'good'}">
-${data.meta}
+<p class="${data.metaLength>160?'error':'good'}">
+${data.metaLength}/160 Characters
 </p>
 
-<p>Characters: ${data.metaLength}/160</p>
-
 </div>
+
+`
+
+
+document.getElementById("headers").innerHTML = `
 
 <div class="card">
 
-<h2>Heading Structure</h2>
+<h3>Heading Structure</h3>
 
-<h3>H1 (${data.h1Count})</h3>
+<p>H1 (${data.h1Count})</p>
 <ul>${data.h1List}</ul>
 
-<h3>H2 (${data.h2Count})</h3>
+<p>H2 (${data.h2Count})</p>
 <ul>${data.h2List}</ul>
 
-<h3>H3 (${data.h3Count})</h3>
+<p>H3 (${data.h3Count})</p>
 <ul>${data.h3List}</ul>
 
 </div>
 
+`
+
+
+document.getElementById("images").innerHTML = `
+
 <div class="card">
 
-<h2>SEO Suggestions</h2>
+<h3>Images</h3>
 
-<ul>${data.suggestions}</ul>
+<p>Total Images : ${data.imageCount}</p>
+
+<p class="${data.imagesMissingAlt>0?'error':'good'}">
+Missing ALT : ${data.imagesMissingAlt}
+</p>
 
 </div>
 
-`;
+`
+
+
+document.getElementById("links").innerHTML = `
+
+<div class="card">
+
+<h3>Links</h3>
+
+<p>Total Links : ${data.totalLinks}</p>
+<p>Internal Links : ${data.internalLinks}</p>
+<p>External Links : ${data.externalLinks}</p>
+
+</div>
+
+`
+
+
+document.getElementById("speed").innerHTML = `
+
+<div class="card">
+
+<h3>Page Speed Suggestions</h3>
+
+<ul>
+
+<li>Optimize images</li>
+<li>Reduce JS</li>
+<li>Enable caching</li>
+<li>Minify CSS</li>
+
+</ul>
+
+</div>
+
+`
 
 }
