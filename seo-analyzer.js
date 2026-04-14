@@ -25,9 +25,10 @@ return parser.parseFromString(html,"text/html")
 async function analyzePage(doc,url){
 
 let score=100
+let suggestions=""
 
 
-/* META */
+/* META TITLE */
 
 const title=doc.querySelector("title")?.innerText || "Missing"
 const meta=doc.querySelector('meta[name="description"]')?.content || "Missing"
@@ -35,34 +36,95 @@ const meta=doc.querySelector('meta[name="description"]')?.content || "Missing"
 const titleLength=title.length
 const metaLength=meta.length
 
+
 let titleHighlighted=title
 let metaHighlighted=meta
 
+
 if(titleLength>70){
+
 titleHighlighted=title.substring(0,70)+
 `<span class="char-warning">`+
 title.substring(70)+
 `</span>`
+
 score-=10
+
+suggestions+=`
+
+<div class="suggestion high">
+<h4>Meta Title Too Long</h4>
+<p>Reduce meta title under 70 characters to prevent truncation in SERP.</p>
+</div>
+
+`
+
 }
 
+
+if(titleLength<30){
+
+score-=5
+
+suggestions+=`
+
+<div class="suggestion medium">
+<h4>Meta Title Too Short</h4>
+<p>Increase title length and include primary keyword.</p>
+</div>
+
+`
+
+}
+
+
+/* META DESCRIPTION */
+
 if(metaLength>160){
+
 metaHighlighted=meta.substring(0,160)+
 `<span class="char-warning">`+
 meta.substring(160)+
 `</span>`
+
 score-=10
+
+suggestions+=`
+
+<div class="suggestion high">
+<h4>Meta Description Too Long</h4>
+<p>Keep description under 160 characters for better CTR.</p>
+</div>
+
+`
+
 }
 
+
+if(meta=="Missing"){
+
+score-=15
+
+suggestions+=`
+
+<div class="suggestion high">
+<h4>Meta Description Missing</h4>
+<p>Add compelling description to improve CTR.</p>
+</div>
+
+`
+
+}
 
 
 /* HEADINGS */
 
-const headings=doc.querySelectorAll("h1,h2,h3,h4,h5,h6")
+const headings=doc.querySelectorAll("h1,h2,h3,h4")
 
 let headingStructure=""
-
 let h1Count=doc.querySelectorAll("h1").length
+
+let firstHeading=headings[0]?.tagName
 
 headings.forEach(tag=>{
 headingStructure+=`
@@ -73,9 +135,36 @@ ${tag.tagName} : ${tag.innerText}
 })
 
 
-if(h1Count==0) score-=10
-if(h1Count>1) score-=5
+if(firstHeading!=="H1"){
 
+score-=10
+
+suggestions+=`
+
+<div class="suggestion high">
+<h4>Heading Structure Issue</h4>
+<p>Page starts with ${firstHeading}. H1 should appear first.</p>
+</div>
+
+`
+
+}
+
+
+if(h1Count>1){
+
+score-=5
+
+suggestions+=`
+
+<div class="suggestion medium">
+<h4>Multiple H1 Tags</h4>
+<p>Use only one H1 tag.</p>
+</div>
+
+`
+
+}
 
 
 /* CONTENT */
@@ -83,9 +172,19 @@ if(h1Count>1) score-=5
 const contentLength=doc.body.innerText.length
 
 if(contentLength<1500){
-score-=10
-}
 
+score-=10
+
+suggestions+=`
+
+<div class="suggestion medium">
+<h4>Thin Content</h4>
+<p>Increase content depth to 1500+ words.</p>
+</div>
+
+`
+
+}
 
 
 /* IMAGES */
@@ -104,18 +203,33 @@ imagesMissingAlt++
 let name=img.src.split("/").pop().split(".")[0]
 
 imagesMissingAltList+=`
+
 <tr>
 <td>${img.src}</td>
 <td>${name.replace(/[-_]/g," ")}</td>
 </tr>
+
 `
 
 }
 
 })
 
-if(imagesMissingAlt>0) score-=10
 
+if(imagesMissingAlt>0){
+
+score-=10
+
+suggestions+=`
+
+<div class="suggestion high">
+<h4>Missing ALT Tags</h4>
+<p>${imagesMissingAlt} images missing ALT text.</p>
+</div>
+
+`
+
+}
 
 
 /* LINKS */
@@ -139,10 +253,21 @@ externalLinks++
 
 })
 
-if(internalLinks<5){
-score-=5
-}
 
+if(internalLinks<5){
+
+score-=5
+
+suggestions+=`
+
+<div class="suggestion medium">
+<h4>Low Internal Linking</h4>
+<p>Add internal links to improve crawlability.</p>
+</div>
+
+`
+
+}
 
 
 /* TECHNICAL */
@@ -151,137 +276,52 @@ const canonical=doc.querySelector("link[rel='canonical']")?.href || "Missing"
 const robots=doc.querySelector("meta[name='robots']")?.content || "Missing"
 const schema=doc.querySelector("script[type='application/ld+json']") ? "Present" : "Missing"
 
-let sitemap="Missing"
-
-try{
-const map=await fetch(url+"/sitemap.xml")
-if(map.status==200) sitemap="Present"
-}catch{}
-
-
-if(canonical=="Missing") score-=5
-if(robots=="Missing") score-=5
-if(schema=="Missing") score-=5
-if(sitemap=="Missing") score-=5
-
-
-
-/* SEO SUGGESTIONS */
-
-let suggestions=""
-
-
-/* META */
-
-if(titleLength>70){
-suggestions+=`
-<div class="suggestion high">
-<h4>Meta Title Optimization Required</h4>
-<p>Your meta title exceeds recommended length. Reduce below 70 characters and include primary keyword at beginning.</p>
-</div>
-`
-}
-
-
-if(metaLength>160){
-suggestions+=`
-<div class="suggestion high">
-<h4>Meta Description Optimization Required</h4>
-<p>Meta description is too long. Keep between 140-160 characters and add CTA to improve CTR.</p>
-</div>
-`
-}
-
-
-
-/* HEADINGS */
-
-if(h1Count==0){
-suggestions+=`
-<div class="suggestion high">
-<h4>Missing H1 Tag</h4>
-<p>Add one primary H1 tag including main keyword to improve ranking relevance.</p>
-</div>
-`
-}
-
-if(h1Count>1){
-suggestions+=`
-<div class="suggestion medium">
-<h4>Multiple H1 Tags Found</h4>
-<p>Use only one H1 tag for better SEO structure.</p>
-</div>
-`
-}
-
-
-
-/* CONTENT */
-
-if(contentLength<1500){
-suggestions+=`
-<div class="suggestion medium">
-<h4>Low Content Length</h4>
-<p>Increase content length above 1500 words for better ranking potential.</p>
-</div>
-`
-}
-
-
-
-/* IMAGES */
-
-if(imagesMissingAlt>0){
-suggestions+=`
-<div class="suggestion high">
-<h4>Missing Image ALT Tags</h4>
-<p>${imagesMissingAlt} images missing ALT text. Add descriptive ALT tags including keywords.</p>
-</div>
-`
-}
-
-
-
-/* INTERNAL LINKS */
-
-if(internalLinks<5){
-suggestions+=`
-<div class="suggestion medium">
-<h4>Low Internal Linking</h4>
-<p>Add more internal links to improve crawlability and authority flow.</p>
-</div>
-`
-}
-
-
-
-/* TECHNICAL */
 
 if(canonical=="Missing"){
+
+score-=5
+
 suggestions+=`
+
 <div class="suggestion high">
-<h4>Canonical Tag Missing</h4>
-<p>Add canonical tag to prevent duplicate content issues.</p>
+<h4>Canonical Missing</h4>
+<p>Add canonical tag to prevent duplicate content.</p>
 </div>
+
 `
+
 }
+
 
 if(schema=="Missing"){
+
+score-=5
+
 suggestions+=`
+
 <div class="suggestion medium">
-<h4>Schema Markup Missing</h4>
-<p>Add structured data to improve SERP visibility.</p>
+<h4>Schema Missing</h4>
+<p>Add schema markup for better SERP.</p>
 </div>
+
 `
+
 }
 
-if(sitemap=="Missing"){
+
+if(robots=="Missing"){
+
+score-=5
+
 suggestions+=`
+
 <div class="suggestion medium">
-<h4>Sitemap Missing</h4>
-<p>Add sitemap.xml to improve indexing.</p>
+<h4>Robots Meta Missing</h4>
+<p>Add robots meta tag.</p>
 </div>
+
 `
+
 }
 
 
@@ -311,7 +351,6 @@ externalLinks,
 canonical,
 robots,
 schema,
-sitemap,
 
 suggestions
 
