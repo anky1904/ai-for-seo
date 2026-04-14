@@ -14,12 +14,14 @@ return html
 }
 
 
+
 function parseHTML(html){
 
 const parser=new DOMParser()
 return parser.parseFromString(html,"text/html")
 
 }
+
 
 
 async function analyzePage(doc,url){
@@ -44,7 +46,7 @@ let metaHighlighted=meta
 if(titleLength>70){
 
 titleHighlighted=title.substring(0,70)+
-`<span class="char-warning">`+
+`<span style="color:red">`+
 title.substring(70)+
 `</span>`
 
@@ -52,25 +54,21 @@ score-=8
 
 suggestions+=`
 
-<div class="suggestion high">
-<h4>Meta Title Too Long</h4>
-<p>Reduce meta title below 70 characters. Long titles get truncated in search results and reduce CTR.</p>
+<div class="suggestion-card suggestion-high">
+
+<div class="suggestion-title">
+Meta Title Too Long
 </div>
 
-`
+<p>
+Your meta title exceeds 70 characters. 
+This can reduce CTR and cause truncation.
+</p>
 
-}
+<p>
+Fix: Keep title between 50-60 characters
+</p>
 
-
-if(titleLength<30){
-
-score-=5
-
-suggestions+=`
-
-<div class="suggestion medium">
-<h4>Meta Title Too Short</h4>
-<p>Add primary keyword and increase title length for better ranking relevance.</p>
 </div>
 
 `
@@ -81,7 +79,7 @@ suggestions+=`
 if(metaLength>160){
 
 metaHighlighted=meta.substring(0,160)+
-`<span class="char-warning">`+
+`<span style="color:red">`+
 meta.substring(160)+
 `</span>`
 
@@ -89,25 +87,16 @@ score-=8
 
 suggestions+=`
 
-<div class="suggestion high">
-<h4>Meta Description Too Long</h4>
-<p>Keep meta description between 140-160 characters.</p>
+<div class="suggestion-card suggestion-high">
+
+<div class="suggestion-title">
+Meta Description Too Long
 </div>
 
-`
+<p>
+Meta description should be below 160 characters
+</p>
 
-}
-
-
-if(meta=="Missing"){
-
-score-=12
-
-suggestions+=`
-
-<div class="suggestion high">
-<h4>Meta Description Missing</h4>
-<p>Add compelling meta description to improve CTR.</p>
 </div>
 
 `
@@ -118,55 +107,45 @@ suggestions+=`
 
 /* ================= HEADINGS ================= */
 
-const headings=doc.querySelectorAll("h1,h2,h3,h4,h5")
+const headings=doc.querySelectorAll("h1,h2,h3,h4")
 
 let headingStructure=""
 let h1Count=0
-let previousLevel=0
+let firstHeading=headings[0]?.tagName
 
 headings.forEach(tag=>{
 
-const level=parseInt(tag.tagName.replace("H",""))
-
-if(level==1){
+if(tag.tagName==="H1"){
 h1Count++
 }
 
-if(previousLevel && level>previousLevel+1){
-
-score-=5
-
-suggestions+=`
-
-<div class="suggestion high">
-<h4>Heading Structure Issue</h4>
-<p>${tag.tagName} appears after H${previousLevel}. Avoid skipping heading hierarchy.</p>
-</div>
-
-`
-
-}
-
-previousLevel=level
-
 headingStructure+=`
+
 <p class="${tag.tagName.toLowerCase()}">
 ${tag.tagName} : ${tag.innerText}
 </p>
+
 `
 
 })
 
 
-if(h1Count==0){
+if(firstHeading!=="H1"){
 
 score-=10
 
 suggestions+=`
 
-<div class="suggestion high">
-<h4>Missing H1 Tag</h4>
-<p>Add one primary H1 tag including main keyword.</p>
+<div class="suggestion-card suggestion-high">
+
+<div class="suggestion-title">
+Heading Structure Issue
+</div>
+
+<p>
+H1 should appear first
+</p>
+
 </div>
 
 `
@@ -180,30 +159,16 @@ score-=5
 
 suggestions+=`
 
-<div class="suggestion medium">
-<h4>Multiple H1 Tags</h4>
-<p>Use only one H1 tag.</p>
+<div class="suggestion-card suggestion-medium">
+
+<div class="suggestion-title">
+Multiple H1 Tags
 </div>
 
-`
+<p>
+Use only one H1 tag
+</p>
 
-}
-
-
-
-/* ================= CONTENT ================= */
-
-const contentLength=doc.body.innerText.length
-
-if(contentLength<1500){
-
-score-=8
-
-suggestions+=`
-
-<div class="suggestion medium">
-<h4>Thin Content</h4>
-<p>Increase content depth to 1500+ words.</p>
 </div>
 
 `
@@ -247,9 +212,16 @@ score-=8
 
 suggestions+=`
 
-<div class="suggestion high">
-<h4>Missing ALT Tags</h4>
-<p>${imagesMissingAlt} images missing ALT text. Add descriptive ALT text including keywords.</p>
+<div class="suggestion-card suggestion-high">
+
+<div class="suggestion-title">
+Missing ALT Tags
+</div>
+
+<p>
+${imagesMissingAlt} images missing ALT text
+</p>
+
 </div>
 
 `
@@ -286,9 +258,16 @@ score-=5
 
 suggestions+=`
 
-<div class="suggestion medium">
-<h4>Low Internal Linking</h4>
-<p>Add more internal links to improve crawlability.</p>
+<div class="suggestion-card suggestion-medium">
+
+<div class="suggestion-title">
+Low Internal Linking
+</div>
+
+<p>
+Add more internal links
+</p>
+
 </div>
 
 `
@@ -303,12 +282,16 @@ const canonical=doc.querySelector("link[rel='canonical']")?.href || "Missing"
 const robots=doc.querySelector("meta[name='robots']")?.content || "Missing"
 const schema=doc.querySelector("script[type='application/ld+json']") ? "Present" : "Missing"
 
-
 let sitemap="Missing"
 
 try{
+
 const map=await fetch(url+"/sitemap.xml")
-if(map.status==200) sitemap="Present"
+
+if(map.status==200){
+sitemap="Present"
+}
+
 }catch{}
 
 
@@ -318,9 +301,16 @@ score-=5
 
 suggestions+=`
 
-<div class="suggestion high">
-<h4>Canonical Missing</h4>
-<p>Add canonical tag.</p>
+<div class="suggestion-card suggestion-high">
+
+<div class="suggestion-title">
+Canonical Missing
+</div>
+
+<p>
+Add canonical tag
+</p>
+
 </div>
 
 `
@@ -334,9 +324,16 @@ score-=5
 
 suggestions+=`
 
-<div class="suggestion medium">
-<h4>Schema Missing</h4>
-<p>Add structured data markup.</p>
+<div class="suggestion-card suggestion-medium">
+
+<div class="suggestion-title">
+Schema Missing
+</div>
+
+<p>
+Add schema markup
+</p>
+
 </div>
 
 `
@@ -350,9 +347,16 @@ score-=5
 
 suggestions+=`
 
-<div class="suggestion medium">
-<h4>Robots Tag Missing</h4>
-<p>Add robots meta tag.</p>
+<div class="suggestion-card suggestion-medium">
+
+<div class="suggestion-title">
+Robots Tag Missing
+</div>
+
+<p>
+Add robots meta tag
+</p>
+
 </div>
 
 `
@@ -360,27 +364,13 @@ suggestions+=`
 }
 
 
-if(sitemap=="Missing"){
 
-score-=5
-
-suggestions+=`
-
-<div class="suggestion medium">
-<h4>Sitemap Missing</h4>
-<p>Add sitemap.xml.</p>
-</div>
-
-`
-
-}
-
-
-/* ================= FINAL ================= */
+/* ================= FINAL SCORE ================= */
 
 if(score<0){
 score=0
 }
+
 
 
 return{
