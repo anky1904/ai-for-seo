@@ -16,12 +16,12 @@ evt.currentTarget.classList.add("active")
 
 async function analyzeSEO(){
 
-const url = document.getElementById("urlInput").value
+const url=document.getElementById("urlInput").value
 
-const html = await fetchHTML(url)
-const doc = parseHTML(html)
+const html=await fetchHTML(url)
+const doc=parseHTML(html)
 
-const data = analyzePage(doc)
+const data=analyzePage(doc)
 
 displayResults(data)
 
@@ -30,12 +30,22 @@ displayResults(data)
 
 function displayResults(data){
 
-document.getElementById("summary").innerHTML = `
+const score=data.score
+
+document.getElementById("summary").innerHTML=`
+
+<div class="score-card">
+
+<div>Overall SEO Score</div>
+<div class="score-number">${score}/100</div>
+
+</div>
 
 <div class="card">
 
 <h3>Meta Title</h3>
 <p>${data.title}</p>
+
 <p class="${data.titleLength>70?'error':'good'}">
 ${data.titleLength}/70 Characters
 </p>
@@ -43,6 +53,7 @@ ${data.titleLength}/70 Characters
 <h3>Meta Description</h3>
 
 <p>${data.meta}</p>
+
 <p class="${data.metaLength>160?'error':'good'}">
 ${data.metaLength}/160 Characters
 </p>
@@ -52,17 +63,19 @@ ${data.metaLength}/160 Characters
 `
 
 
-document.getElementById("headers").innerHTML = `
+document.getElementById("headers").innerHTML=`
 
 <div class="card">
 
-<h3>H1 (${data.h1Count})</h3>
+<h3>Heading Structure</h3>
+
+<h4>H1 (${data.h1Count})</h4>
 <ul>${data.h1List}</ul>
 
-<h3>H2 (${data.h2Count})</h3>
+<h4>H2 (${data.h2Count})</h4>
 <ul>${data.h2List}</ul>
 
-<h3>H3 (${data.h3Count})</h3>
+<h4>H3 (${data.h3Count})</h4>
 <ul>${data.h3List}</ul>
 
 </div>
@@ -70,7 +83,7 @@ document.getElementById("headers").innerHTML = `
 `
 
 
-document.getElementById("images").innerHTML = `
+document.getElementById("images").innerHTML=`
 
 <div class="card">
 
@@ -82,12 +95,16 @@ document.getElementById("images").innerHTML = `
 Missing ALT: ${data.imagesMissingAlt}
 </p>
 
+<h4>Images Missing ALT</h4>
+
+<ul>${data.imagesMissingAltList}</ul>
+
 </div>
 
 `
 
 
-document.getElementById("links").innerHTML = `
+document.getElementById("links").innerHTML=`
 
 <div class="card">
 
@@ -102,7 +119,7 @@ document.getElementById("links").innerHTML = `
 `
 
 
-document.getElementById("speed").innerHTML = `
+document.getElementById("speed").innerHTML=`
 
 <div class="card">
 
@@ -111,9 +128,9 @@ document.getElementById("speed").innerHTML = `
 <ul>
 
 <li>Optimize Images</li>
-<li>Minify CSS</li>
 <li>Reduce JavaScript</li>
 <li>Enable Caching</li>
+<li>Minify CSS</li>
 
 </ul>
 
