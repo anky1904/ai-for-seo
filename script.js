@@ -30,7 +30,7 @@ displayResults(data)
 
 function displayResults(data){
 
-document.getElementById("summary").innerHTML=`
+document.getElementById("meta").innerHTML=`
 
 <div class="score-wrapper">
 
