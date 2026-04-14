@@ -35,21 +35,24 @@ const meta=doc.querySelector('meta[name="description"]')?.content || "Missing"
 const titleLength=title.length
 const metaLength=meta.length
 
+if(titleLength>70) score-=10
+if(metaLength>160) score-=10
 
 
-// HEADERS
 
-const h1=doc.querySelectorAll("h1")
-const h2=doc.querySelectorAll("h2")
-const h3=doc.querySelectorAll("h3")
+// HEADING STRUCTURE
 
-let h1List=""
-let h2List=""
-let h3List=""
+const headings=doc.querySelectorAll("h1,h2,h3,h4,h5,h6")
 
-h1.forEach(el=>h1List+=`<li>${el.innerText}</li>`)
-h2.forEach(el=>h2List+=`<li>${el.innerText}</li>`)
-h3.forEach(el=>h3List+=`<li>${el.innerText}</li>`)
+let headingStructure=""
+
+headings.forEach(tag=>{
+
+headingStructure+=`
+<p><strong>${tag.tagName}</strong> : ${tag.innerText}</p>
+`
+
+})
 
 
 
@@ -62,26 +65,24 @@ let imagesMissingAltList=""
 
 images.forEach(img=>{
 
-if(!img.getAttribute("alt")){
+if(!img.alt){
 
 imagesMissingAlt++
 
 let name=img.src.split("/").pop().split(".")[0]
 
-name=name.replace(/[-_]/g," ")
-
 imagesMissingAltList+=`
-
 <tr>
 <td>${img.src}</td>
-<td>${name}</td>
+<td>${name.replace(/[-_]/g," ")}</td>
 </tr>
-
 `
 
 }
 
 })
+
+if(imagesMissingAlt>0) score-=10
 
 
 
@@ -98,13 +99,9 @@ const href=link.getAttribute("href")
 
 if(!href) return
 
-if(
-href.startsWith("/") ||
-href.includes(url)
-){
+if(href.startsWith("/") || href.includes(url)){
 internalLinks++
-}
-else{
+}else{
 externalLinks++
 }
 
@@ -112,7 +109,7 @@ externalLinks++
 
 
 
-// TECHNICAL SEO
+// TECHNICAL
 
 const canonical=doc.querySelector("link[rel='canonical']")?.href || "Missing"
 
@@ -124,69 +121,25 @@ const schema=doc.querySelector("script[type='application/ld+json']")
 
 
 
-// SITEMAP
-
-let sitemap="Checking..."
+let sitemap="Missing"
 
 try{
 
-const sitemapCheck=await fetch(url+"/sitemap.xml")
+const map=await fetch(url+"/sitemap.xml")
 
-sitemap=sitemapCheck.status===200
-? "Present"
-: "Missing"
+if(map.status==200) sitemap="Present"
 
-}catch{
-
-sitemap="Missing"
-
-}
+}catch{}
 
 
 
-// PAGE SPEED
+// SCORING
 
-let speed="Unavailable"
-
-try{
-
-const api=`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}`
-
-const res=await fetch(api)
-
-const json=await res.json()
-
-if(
-json &&
-json.lighthouseResult &&
-json.lighthouseResult.categories &&
-json.lighthouseResult.categories.performance
-){
-
-speed=Math.round(
-json.lighthouseResult.categories.performance.score*100
-)
-
-}
-
-}catch{
-
-speed="Unavailable"
-
-}
-
-
-
-// SEO SCORE
-
-if(titleLength>70) score-=10
-if(metaLength>160) score-=10
-if(imagesMissingAlt>0) score-=10
-if(h1.length==0) score-=10
-if(canonical=="Missing") score-=5
-if(robots=="Missing") score-=5
+if(!canonical || canonical=="Missing") score-=5
+if(!robots || robots=="Missing") score-=5
 if(schema=="Missing") score-=5
 
+if(score<0) score=0
 
 
 return{
@@ -199,13 +152,7 @@ meta,
 titleLength,
 metaLength,
 
-h1Count:h1.length,
-h2Count:h2.length,
-h3Count:h3.length,
-
-h1List,
-h2List,
-h3List,
+headingStructure,
 
 imageCount:images.length,
 imagesMissingAlt,
@@ -218,8 +165,7 @@ externalLinks,
 canonical,
 robots,
 schema,
-sitemap,
-speed
+sitemap
 
 }
 
