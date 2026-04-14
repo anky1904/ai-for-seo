@@ -3,11 +3,9 @@ async function analyzeSEO() {
 const url = document.getElementById("urlInput").value;
 
 if(!url){
-alert("Please enter URL");
+alert("Enter URL");
 return;
 }
-
-try {
 
 const html = await fetchHTML(url);
 const doc = parseHTML(html);
@@ -15,56 +13,79 @@ const data = analyzePage(doc);
 
 displayResults(data);
 
-} catch(error){
-
-document.getElementById("results").innerHTML = 
-"<p>Error fetching page.</p>";
-
-}
-
 }
 
 function displayResults(data){
 
-const titleLength = data.title ? data.title.length : 0;
-const metaLength = data.meta ? data.meta.length : 0;
+let score = 100;
 
-const titleColor = titleLength > 70 ? "red" : "green";
-const metaColor = metaLength > 160 ? "red" : "green";
+if(data.titleMissing) score -= 15;
+if(data.titleLong) score -= 10;
+if(data.metaMissing) score -= 15;
+if(data.metaLong) score -= 10;
+if(data.h1Missing) score -= 15;
+if(data.multipleH1) score -= 10;
+
+if(score < 0) score = 0;
 
 document.getElementById("results").innerHTML = `
 
-<h2>SEO Audit Report</h2>
+<div class="card">
 
-<h3>Meta Title</h3>
-<p style="color:${titleColor}">
-${data.title || "Missing"} 
-<br>
-Characters: ${titleLength}/70
+<div class="score">SEO Score: ${score}/100</div>
+
+<div class="progress">
+<div class="progress-bar" style="width:${score}%"></div>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Meta Title</h2>
+
+<p class="${data.titleLong ? 'error':'good'}">
+${data.title}
 </p>
 
-<h3>Meta Description</h3>
-<p style="color:${metaColor}">
-${data.meta || "Missing"}
-<br>
-Characters: ${metaLength}/160
+<p>Characters: ${data.titleLength}/70</p>
+
+</div>
+
+<div class="card">
+
+<h2>Meta Description</h2>
+
+<p class="${data.metaLong ? 'error':'good'}">
+${data.meta}
 </p>
 
-<h3>Heading Structure</h3>
+<p>Characters: ${data.metaLength}/160</p>
 
-<p><strong>H1:</strong> ${data.h1Count}</p>
+</div>
+
+<div class="card">
+
+<h2>Heading Structure</h2>
+
+<h3>H1 (${data.h1Count})</h3>
 <ul>${data.h1List}</ul>
 
-<p><strong>H2:</strong> ${data.h2Count}</p>
+<h3>H2 (${data.h2Count})</h3>
 <ul>${data.h2List}</ul>
 
-<p><strong>H3:</strong> ${data.h3Count}</p>
+<h3>H3 (${data.h3Count})</h3>
 <ul>${data.h3List}</ul>
 
-<h3>SEO Suggestions</h3>
-<ul>
-${data.suggestions}
-</ul>
+</div>
+
+<div class="card">
+
+<h2>SEO Suggestions</h2>
+
+<ul>${data.suggestions}</ul>
+
+</div>
 
 `;
 
