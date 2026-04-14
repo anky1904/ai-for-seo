@@ -30,8 +30,36 @@ let score=100
 const title=doc.querySelector("title")?.innerText || "Missing"
 const meta=doc.querySelector('meta[name="description"]')?.content || "Missing"
 
+const titleLength=title.length
+const metaLength=meta.length
 
-// Headings exact structure
+
+let titleHighlighted=title
+let metaHighlighted=meta
+
+if(titleLength>70){
+
+titleHighlighted=title.substring(0,70)+
+`<span class="char-warning">`+
+title.substring(70)+
+`</span>`
+
+score-=10
+}
+
+
+if(metaLength>160){
+
+metaHighlighted=meta.substring(0,160)+
+`<span class="char-warning">`+
+meta.substring(160)+
+`</span>`
+
+score-=10
+}
+
+
+// headings
 
 const headings=doc.querySelectorAll("h1,h2,h3,h4,h5,h6")
 
@@ -48,8 +76,7 @@ ${tag.tagName} : ${tag.innerText}
 })
 
 
-
-// Images
+// images
 
 const images=doc.querySelectorAll("img")
 
@@ -62,15 +89,13 @@ if(!img.alt){
 
 imagesMissingAlt++
 
-let alt=img.src.split("/").pop().split(".")[0]
+let name=img.src.split("/").pop().split(".")[0]
 
 imagesMissingAltList+=`
-
 <tr>
 <td>${img.src}</td>
-<td>${alt.replace(/[-_]/g," ")}</td>
+<td>${name.replace(/[-_]/g," ")}</td>
 </tr>
-
 `
 
 }
@@ -80,7 +105,7 @@ imagesMissingAltList+=`
 if(imagesMissingAlt>0) score-=10
 
 
-// Links
+// links
 
 const links=doc.querySelectorAll("a")
 
@@ -102,13 +127,11 @@ externalLinks++
 })
 
 
-
-// Technical
+// technical
 
 const canonical=doc.querySelector("link[rel='canonical']")?.href || "Missing"
 const robots=doc.querySelector("meta[name='robots']")?.content || "Missing"
 const schema=doc.querySelector("script[type='application/ld+json']") ? "Present" : "Missing"
-
 
 let sitemap="Missing"
 
@@ -117,19 +140,18 @@ const map=await fetch(url+"/sitemap.xml")
 if(map.status==200) sitemap="Present"
 }catch{}
 
-
-// Score
-
-if(canonical=="Missing") score-=5
-if(robots=="Missing") score-=5
-if(schema=="Missing") score-=5
-
-
 return{
 
 score,
+
 title,
 meta,
+
+titleHighlighted,
+metaHighlighted,
+
+titleLength,
+metaLength,
 
 headingStructure,
 
