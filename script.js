@@ -36,7 +36,6 @@ document.getElementById("summary").innerHTML = `
 
 <h3>Meta Title</h3>
 <p>${data.title}</p>
-
 <p class="${data.titleLength>70?'error':'good'}">
 ${data.titleLength}/70 Characters
 </p>
@@ -44,7 +43,6 @@ ${data.titleLength}/70 Characters
 <h3>Meta Description</h3>
 
 <p>${data.meta}</p>
-
 <p class="${data.metaLength>160?'error':'good'}">
 ${data.metaLength}/160 Characters
 </p>
@@ -58,15 +56,13 @@ document.getElementById("headers").innerHTML = `
 
 <div class="card">
 
-<h3>Heading Structure</h3>
-
-<p>H1 (${data.h1Count})</p>
+<h3>H1 (${data.h1Count})</h3>
 <ul>${data.h1List}</ul>
 
-<p>H2 (${data.h2Count})</p>
+<h3>H2 (${data.h2Count})</h3>
 <ul>${data.h2List}</ul>
 
-<p>H3 (${data.h3Count})</p>
+<h3>H3 (${data.h3Count})</h3>
 <ul>${data.h3List}</ul>
 
 </div>
@@ -80,10 +76,10 @@ document.getElementById("images").innerHTML = `
 
 <h3>Images</h3>
 
-<p>Total Images : ${data.imageCount}</p>
+<p>Total Images: ${data.imageCount}</p>
 
 <p class="${data.imagesMissingAlt>0?'error':'good'}">
-Missing ALT : ${data.imagesMissingAlt}
+Missing ALT: ${data.imagesMissingAlt}
 </p>
 
 </div>
@@ -97,9 +93,9 @@ document.getElementById("links").innerHTML = `
 
 <h3>Links</h3>
 
-<p>Total Links : ${data.totalLinks}</p>
-<p>Internal Links : ${data.internalLinks}</p>
-<p>External Links : ${data.externalLinks}</p>
+<p>Total Links: ${data.totalLinks}</p>
+<p>Internal Links: ${data.internalLinks}</p>
+<p>External Links: ${data.externalLinks}</p>
 
 </div>
 
@@ -114,10 +110,10 @@ document.getElementById("speed").innerHTML = `
 
 <ul>
 
-<li>Optimize images</li>
-<li>Reduce JS</li>
-<li>Enable caching</li>
+<li>Optimize Images</li>
 <li>Minify CSS</li>
+<li>Reduce JavaScript</li>
+<li>Enable Caching</li>
 
 </ul>
 
