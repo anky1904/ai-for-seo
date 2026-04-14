@@ -22,7 +22,7 @@ return parser.parseFromString(html,"text/html")
 }
 
 
-function analyzePage(doc){
+async function analyzePage(doc,url){
 
 let score=100
 
@@ -32,24 +32,6 @@ const meta=doc.querySelector('meta[name="description"]')?.content || "Missing"
 const titleLength=title.length
 const metaLength=meta.length
 
-if(titleLength>70) score-=10
-if(metaLength>160) score-=10
-
-
-const h1=doc.querySelectorAll("h1")
-const h2=doc.querySelectorAll("h2")
-const h3=doc.querySelectorAll("h3")
-
-if(h1.length==0) score-=10
-
-let h1List=""
-let h2List=""
-let h3List=""
-
-h1.forEach(el=>h1List+=`<li>${el.innerText}</li>`)
-h2.forEach(el=>h2List+=`<li>${el.innerText}</li>`)
-h3.forEach(el=>h3List+=`<li>${el.innerText}</li>`)
-
 
 const images=doc.querySelectorAll("img")
 
@@ -58,50 +40,56 @@ let imagesMissingAltList=""
 
 images.forEach(img=>{
 
-if(!img.getAttribute("alt")){
+if(!img.alt){
 
 imagesMissingAlt++
 
-const src=img.src
-
-let suggestedAlt=src.split("/").pop()
-suggestedAlt=suggestedAlt.replace(/[-_]/g," ")
-suggestedAlt=suggestedAlt.split(".")[0]
+let alt=img.src.split("/").pop()
 
 imagesMissingAltList+=`
-
 <tr>
-<td>${src}</td>
-<td>${suggestedAlt}</td>
+<td>${img.src}</td>
+<td>${alt}</td>
 </tr>
-
 `
 
 }
 
 })
 
-if(imagesMissingAlt>0) score-=10
+
+const canonical=doc.querySelector("link[rel='canonical']")?.href || "Missing"
+const robots=doc.querySelector("meta[name='robots']")?.content || "Missing"
+
+const schema=doc.querySelector("script[type='application/ld+json']")
+? "Present"
+: "Missing"
+
+let sitemap="Missing"
+
+try{
+const map=await fetch(url+"/sitemap.xml")
+if(map.status==200) sitemap="Present"
+}catch{}
 
 
-const links=doc.querySelectorAll("a")
+let speed="Checking..."
 
-let internalLinks=0
-let externalLinks=0
+try{
 
-links.forEach(link=>{
+const api=`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}`
 
-const href=link.getAttribute("href")
+const res=await fetch(api)
 
-if(!href) return
+const json=await res.json()
 
-if(href.startsWith("/")){
-internalLinks++
-}else{
-externalLinks++
+speed=Math.round(json.lighthouseResult.categories.performance.score*100)
+
+}catch{
+
+speed="Unavailable"
+
 }
-
-})
 
 
 return{
@@ -114,21 +102,15 @@ meta,
 titleLength,
 metaLength,
 
-h1Count:h1.length,
-h2Count:h2.length,
-h3Count:h3.length,
-
-h1List,
-h2List,
-h3List,
-
 imageCount:images.length,
 imagesMissingAlt,
 imagesMissingAltList,
 
-totalLinks:links.length,
-internalLinks,
-externalLinks
+canonical,
+robots,
+schema,
+sitemap,
+speed
 
 }
 
