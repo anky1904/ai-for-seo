@@ -30,15 +30,11 @@ displayResults(data)
 
 function displayResults(data){
 
-const score=data.score
-
 document.getElementById("summary").innerHTML=`
 
 <div class="score-card">
-
 <div>Overall SEO Score</div>
-<div class="score-number">${score}/100</div>
-
+<div class="score-number">${data.score}/100</div>
 </div>
 
 <div class="card">
@@ -95,9 +91,17 @@ document.getElementById("images").innerHTML=`
 Missing ALT: ${data.imagesMissingAlt}
 </p>
 
-<h4>Images Missing ALT</h4>
+<h3>Images Missing ALT</h3>
 
-<ul>${data.imagesMissingAltList}</ul>
+<table style="width:100%">
+<tr>
+<th>Image URL</th>
+<th>Suggested ALT</th>
+</tr>
+
+${data.imagesMissingAltList}
+
+</table>
 
 </div>
 
@@ -113,26 +117,6 @@ document.getElementById("links").innerHTML=`
 <p>Total Links: ${data.totalLinks}</p>
 <p>Internal Links: ${data.internalLinks}</p>
 <p>External Links: ${data.externalLinks}</p>
-
-</div>
-
-`
-
-
-document.getElementById("speed").innerHTML=`
-
-<div class="card">
-
-<h3>Page Speed Suggestions</h3>
-
-<ul>
-
-<li>Optimize Images</li>
-<li>Reduce JavaScript</li>
-<li>Enable Caching</li>
-<li>Minify CSS</li>
-
-</ul>
 
 </div>
 
