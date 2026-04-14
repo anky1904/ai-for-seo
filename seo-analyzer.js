@@ -1,13 +1,13 @@
 async function fetchHTML(url){
 
 if(!url.startsWith("http")){
-url = "https://" + url
+url="https://"+url
 }
 
-const proxy = "https://corsproxy.io/?"
+const proxy="https://corsproxy.io/?"
 
-const response = await fetch(proxy + encodeURIComponent(url))
-const html = await response.text()
+const response=await fetch(proxy+encodeURIComponent(url))
+const html=await response.text()
 
 return html
 
@@ -16,7 +16,7 @@ return html
 
 function parseHTML(html){
 
-const parser = new DOMParser()
+const parser=new DOMParser()
 return parser.parseFromString(html,"text/html")
 
 }
@@ -24,61 +24,68 @@ return parser.parseFromString(html,"text/html")
 
 function analyzePage(doc){
 
-const title = doc.querySelector("title")?.innerText || "Missing"
-const meta = doc.querySelector('meta[name="description"]')?.content || "Missing"
+let score=100
 
-const titleLength = title.length
-const metaLength = meta.length
+const title=doc.querySelector("title")?.innerText || "Missing"
+const meta=doc.querySelector('meta[name="description"]')?.content || "Missing"
+
+const titleLength=title.length
+const metaLength=meta.length
 
 
-// HEADINGS
+if(titleLength>70) score-=10
+if(metaLength>160) score-=10
 
-const h1 = doc.querySelectorAll("h1")
-const h2 = doc.querySelectorAll("h2")
-const h3 = doc.querySelectorAll("h3")
+
+const h1=doc.querySelectorAll("h1")
+const h2=doc.querySelectorAll("h2")
+const h3=doc.querySelectorAll("h3")
+
+
+if(h1.length==0) score-=15
+if(h1.length>1) score-=10
+
 
 let h1List=""
 let h2List=""
 let h3List=""
 
-h1.forEach(el => h1List += `<li>${el.innerText}</li>`)
-h2.forEach(el => h2List += `<li>${el.innerText}</li>`)
-h3.forEach(el => h3List += `<li>${el.innerText}</li>`)
+h1.forEach(el=>h1List+=`<li>${el.innerText}</li>`)
+h2.forEach(el=>h2List+=`<li>${el.innerText}</li>`)
+h3.forEach(el=>h3List+=`<li>${el.innerText}</li>`)
 
 
-// IMAGES
+const images=doc.querySelectorAll("img")
 
-const images = doc.querySelectorAll("img")
-
-let imagesMissingAlt = 0
+let imagesMissingAlt=0
+let imagesMissingAltList=""
 
 images.forEach(img=>{
+
 if(!img.getAttribute("alt")){
 imagesMissingAlt++
+imagesMissingAltList+=`<li>${img.src}</li>`
 }
+
 })
 
+if(imagesMissingAlt>0) score-=10
 
-// LINKS
 
-const links = doc.querySelectorAll("a")
+const links=doc.querySelectorAll("a")
 
-let internalLinks = 0
-let externalLinks = 0
+let internalLinks=0
+let externalLinks=0
 
 links.forEach(link=>{
 
-const href = link.getAttribute("href")
+const href=link.getAttribute("href")
 
 if(!href) return
 
-if(
-href.startsWith("/") ||
-href.includes(doc.location?.hostname)
-){
+if(href.startsWith("/")){
 internalLinks++
-}
-else{
+}else{
 externalLinks++
 }
 
@@ -86,6 +93,8 @@ externalLinks++
 
 
 return{
+
+score,
 
 title,
 meta,
@@ -101,12 +110,13 @@ h1List,
 h2List,
 h3List,
 
-imageCount: images.length,
-imagesMissingAlt: imagesMissingAlt,
+imageCount:images.length,
+imagesMissingAlt,
+imagesMissingAltList,
 
-totalLinks: links.length,
-internalLinks: internalLinks,
-externalLinks: externalLinks
+totalLinks:links.length,
+internalLinks,
+externalLinks
 
 }
 
