@@ -15,25 +15,9 @@
 
 <div class="container">
 
-<!-- Hero -->
-
 <div class="hero">
 
 <h1>AI SEO Website Analyzer</h1>
-
-<p class="hero-sub">
-Audit your website in seconds. Detect SEO issues. Improve rankings faster.
-</p>
-
-<div class="badges">
-
-<span>Meta Tags Audit</span>
-<span>Heading Structure</span>
-<span>Image Optimization</span>
-<span>Technical SEO</span>
-<span>Internal Links</span>
-
-</div>
 
 <p class="hero-credit">
 Created by 
@@ -46,14 +30,12 @@ Ankush Sable
 </div>
 
 
-<!-- Search -->
-
 <div class="search-section">
 
 <input 
 type="text" 
 id="urlInput" 
-placeholder="Enter Website URL (Example: https://example.com)"
+placeholder="Enter Website URL"
 class="search-bar"
 />
 
@@ -61,47 +43,35 @@ class="search-bar"
 Analyze Website
 </button>
 
-<div class="examples">
-
-Try Example:
-
-<span onclick="fillExample('https://www.trulydesi.in')">
-trulydesi.in
-</span>
-
-<span onclick="fillExample('https://underarmour.in')">
-underarmour.in
-</span>
-
 </div>
 
-</div>
-
-
-<!-- Loading -->
-
-<div id="loading" class="loading">
-
-Analyzing Website...
-<div class="loader"></div>
-
-</div>
-
-
-<!-- Tabs -->
 
 <div class="tabs">
 
-<button class="tab active" onclick="openTab(event,'summary')">Summary</button>
-<button class="tab" onclick="openTab(event,'headers')">Headers</button>
-<button class="tab" onclick="openTab(event,'images')">Images</button>
-<button class="tab" onclick="openTab(event,'links')">Links</button>
-<button class="tab" onclick="openTab(event,'technical')">Technical</button>
+<button class="tab active" onclick="openTab(event,'meta')">
+Meta Title / Description
+</button>
+
+<button class="tab" onclick="openTab(event,'headers')">
+Headers
+</button>
+
+<button class="tab" onclick="openTab(event,'images')">
+Images
+</button>
+
+<button class="tab" onclick="openTab(event,'links')">
+Links
+</button>
+
+<button class="tab" onclick="openTab(event,'technical')">
+Technical
+</button>
 
 </div>
 
 
-<div id="summary" class="tab-content active"></div>
+<div id="meta" class="tab-content active"></div>
 <div id="headers" class="tab-content"></div>
 <div id="images" class="tab-content"></div>
 <div id="links" class="tab-content"></div>
@@ -112,24 +82,7 @@ Analyzing Website...
 <script src="script.js"></script>
 
 <script>
-
-document.getElementById("analyzeBtn").addEventListener("click", async function(){
-
-document.getElementById("loading").style.display="block"
-
-await analyzeSEO()
-
-document.getElementById("loading").style.display="none"
-
-})
-
-
-function fillExample(url){
-
-document.getElementById("urlInput").value=url
-
-}
-
+document.getElementById("analyzeBtn").addEventListener("click", analyzeSEO);
 </script>
 
 </body>
