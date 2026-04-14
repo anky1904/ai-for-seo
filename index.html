@@ -1,14 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI SEO Tool - Ankush Sable</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
 <body>
 
 <div class="container">
 
 <div class="branding-header">
-
-<div class="brand-left">
-<h2>AI SEO On-Page Optimization Tool</h2>
+<h1>AI SEO On-Page Optimization Tool</h1>
 <p>Created by <strong>Ankush Sable</strong> | Digital Marketing & SEO Expert</p>
-</div>
-
 </div>
 
 <input 
@@ -17,15 +25,15 @@ id="urlInput"
 placeholder="Enter Website URL"
 >
 
-<button id="analyzeBtn">Analyze SEO</button>
+<button onclick="analyzeSEO()">Analyze SEO</button>
 
 <div class="tabs">
 
-<button class="tab active" onclick="openTab('summary')">Summary</button>
-<button class="tab" onclick="openTab('headers')">Headers</button>
-<button class="tab" onclick="openTab('images')">Images</button>
-<button class="tab" onclick="openTab('links')">Links</button>
-<button class="tab" onclick="openTab('speed')">Page Speed</button>
+<button class="tab active" onclick="openTab(event,'summary')">Summary</button>
+<button class="tab" onclick="openTab(event,'headers')">Headers</button>
+<button class="tab" onclick="openTab(event,'images')">Images</button>
+<button class="tab" onclick="openTab(event,'links')">Links</button>
+<button class="tab" onclick="openTab(event,'speed')">Page Speed</button>
 
 </div>
 
@@ -36,10 +44,7 @@ placeholder="Enter Website URL"
 <div id="speed" class="tab-content"></div>
 
 <div class="footer">
-
-Tool Built by <strong>Ankush Sable</strong>  
-Digital Marketing & SEO Expert
-
+Tool Created by Ankush Sable | Digital Marketing & SEO Expert
 </div>
 
 </div>
@@ -47,8 +52,6 @@ Digital Marketing & SEO Expert
 <script src="seo-analyzer.js"></script>
 <script src="script.js"></script>
 
-<script>
-document.getElementById("analyzeBtn").addEventListener("click", analyzeSEO);
-</script>
-
 </body>
+
+</html>
