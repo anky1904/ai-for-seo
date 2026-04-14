@@ -28,25 +28,19 @@ let score=100
 let suggestions=""
 
 
+
 /* PAGE TYPE DETECTION */
 
 let pageType="General"
 
-const schemaScript=doc.querySelector('script[type="application/ld+json"]')
-
-if(schemaScript){
-
-const schemaText=schemaScript.innerText
-
-if(schemaText.includes("Product")){
+if(url.includes("/product") || url.includes("/products")){
 pageType="Product"
 }
 
-if(schemaText.includes("Article")){
+if(url.includes("/blog") || url.includes("/blogs")){
 pageType="Blog"
 }
 
-}
 
 
 
@@ -58,109 +52,53 @@ const meta=doc.querySelector('meta[name="description"]')?.content || "Missing"
 const titleLength=title.length
 const metaLength=meta.length
 
-let titleHighlighted=title
-let metaHighlighted=meta
-
 
 if(titleLength>70){
 
 score-=10
 
 suggestions+=`
-
 <div class="suggestion high">
 <h4>Meta Title Too Long</h4>
-<p>Reduce meta title under 70 characters to prevent truncation.</p>
+<p>Reduce meta title below 70 characters.</p>
 </div>
-
 `
 
 }
 
 
-if(!title.toLowerCase().includes("|")){
-
-suggestions+=`
-
-<div class="suggestion medium">
-<h4>Brand Missing in Title</h4>
-<p>Add brand name in title to improve CTR.</p>
-</div>
-
-`
-
-}
-
-
-/* META DESCRIPTION */
 
 if(metaLength<120){
 
-suggestions+=`
-
-<div class="suggestion medium">
-<h4>Meta Description Too Short</h4>
-<p>Increase description to 140–160 characters.</p>
-</div>
-
-`
-
 score-=5
 
+suggestions+=`
+<div class="suggestion medium">
+<h4>Meta Description Too Short</h4>
+<p>Increase meta description for better CTR.</p>
+</div>
+`
+
 }
+
+
 
 
 /* HEADINGS */
 
 const headings=doc.querySelectorAll("h1,h2,h3")
 
-let headingStructure=""
-let h1Count=doc.querySelectorAll("h1").length
-
 const firstHeading=headings[0]?.tagName
-
-headings.forEach(tag=>{
-
-headingStructure+=`
-<p class="${tag.tagName.toLowerCase()}">
-${tag.tagName}: ${tag.innerText}
-</p>
-`
-
-})
-
 
 if(firstHeading!="H1"){
 
 score-=10
 
 suggestions+=`
-
 <div class="suggestion high">
 <h4>Heading Structure Issue</h4>
-<p>Page starts with ${firstHeading}. H1 should appear first.</p>
+<p>H1 should appear first.</p>
 </div>
-
-`
-
-}
-
-
-/* CONTENT */
-
-const contentLength=doc.body.innerText.length
-
-if(contentLength<1500){
-
-score-=10
-
-suggestions+=`
-
-<div class="suggestion medium">
-<h4>Thin Content</h4>
-<p>Increase content depth for better ranking.</p>
-</div>
-
 `
 
 }
@@ -172,33 +110,27 @@ suggestions+=`
 const images=doc.querySelectorAll("img")
 
 let imagesMissingAlt=0
-let imagesMissingAltList=""
 
 images.forEach(img=>{
-
 if(!img.alt){
-
 imagesMissingAlt++
-
 }
-
 })
 
 
 if(imagesMissingAlt>0){
 
-score-=10
+score-=5
 
 suggestions+=`
-
 <div class="suggestion high">
 <h4>Missing ALT Tags</h4>
 <p>${imagesMissingAlt} images missing ALT text.</p>
 </div>
-
 `
 
 }
+
 
 
 
@@ -226,80 +158,186 @@ if(internalLinks<5){
 score-=5
 
 suggestions+=`
-
 <div class="suggestion medium">
 <h4>Low Internal Linking</h4>
-<p>Add more internal links.</p>
+<p>Add contextual internal links.</p>
 </div>
-
 `
 
 }
 
 
 
-/* PRODUCT PAGE SUGGESTIONS */
+/* PRODUCT PAGE SEO */
 
 if(pageType=="Product"){
 
-const reviewCheck=doc.body.innerText.toLowerCase().includes("review")
+
+const reviewCheck=
+doc.body.innerText.toLowerCase().includes("review")
 
 if(!reviewCheck){
 
-suggestions+=`
+score-=5
 
+suggestions+=`
 <div class="suggestion high">
 <h4>Product Reviews Missing</h4>
-<p>Add customer reviews to improve ranking.</p>
+<p>Add customer reviews to improve ranking and trust.</p>
 </div>
-
 `
-
-score-=5
 
 }
 
 
-const faqCheck=doc.body.innerText.toLowerCase().includes("faq")
+
+const faqCheck=
+doc.body.innerText.toLowerCase().includes("faq")
 
 if(!faqCheck){
 
-suggestions+=`
-
-<div class="suggestion medium">
-<h4>FAQ Section Missing</h4>
-<p>Add FAQ for long-tail keywords.</p>
-</div>
-
-`
-
 score-=5
 
+suggestions+=`
+<div class="suggestion medium">
+<h4>FAQ Section Missing</h4>
+<p>Add FAQ section for long tail keywords.</p>
+</div>
+`
+
 }
 
 
+
+const descriptionLength=doc.body.innerText.length
+
+if(descriptionLength<1200){
+
+score-=10
+
+suggestions+=`
+<div class="suggestion high">
+<h4>Product Description Too Short</h4>
+<p>Expand description with benefits and features.</p>
+</div>
+`
+
 }
 
 
 
-/* BLOG PAGE SUGGESTIONS */
+const relatedCheck=
+doc.body.innerText.toLowerCase().includes("related")
+
+if(!relatedCheck){
+
+score-=3
+
+suggestions+=`
+<div class="suggestion low">
+<h4>Related Products Missing</h4>
+<p>Add related products for internal linking.</p>
+</div>
+`
+
+}
+
+
+
+const priceCheck=
+doc.body.innerText.includes("₹") ||
+doc.body.innerText.includes("$")
+
+if(!priceCheck){
+
+score-=3
+
+suggestions+=`
+<div class="suggestion medium">
+<h4>Price Not Clearly Visible</h4>
+<p>Ensure price visible for product schema.</p>
+</div>
+`
+
+}
+
+
+
+}
+
+
+
+/* BLOG PAGE SEO */
 
 if(pageType=="Blog"){
 
-const tocCheck=doc.body.innerText.toLowerCase().includes("table of contents")
+
+const contentLength=doc.body.innerText.length
+
+if(contentLength<1500){
+
+score-=10
+
+suggestions+=`
+<div class="suggestion high">
+<h4>Thin Content</h4>
+<p>Increase blog content depth.</p>
+</div>
+`
+
+}
+
+
+
+const faqCheck=
+doc.body.innerText.toLowerCase().includes("faq")
+
+if(!faqCheck){
+
+score-=5
+
+suggestions+=`
+<div class="suggestion medium">
+<h4>FAQ Section Missing</h4>
+<p>Add FAQ section.</p>
+</div>
+`
+
+}
+
+
+
+const tocCheck=
+doc.body.innerText.toLowerCase().includes("table of contents")
 
 if(!tocCheck){
 
-suggestions+=`
+score-=5
 
+suggestions+=`
 <div class="suggestion medium">
 <h4>Table of Contents Missing</h4>
-<p>Add TOC to improve UX.</p>
+<p>Add TOC for better UX.</p>
 </div>
-
 `
 
+}
+
+
+
+const authorCheck=
+doc.body.innerText.toLowerCase().includes("author")
+
+if(!authorCheck){
+
 score-=5
+
+suggestions+=`
+<div class="suggestion medium">
+<h4>Author Section Missing</h4>
+<p>Add author info for E-E-A-T.</p>
+</div>
+`
 
 }
 
@@ -316,40 +354,28 @@ if(canonical=="Missing"){
 score-=5
 
 suggestions+=`
-
 <div class="suggestion high">
 <h4>Canonical Missing</h4>
 <p>Add canonical tag.</p>
 </div>
-
 `
 
 }
 
 
+
 return{
 
 score,
-
 title,
 meta,
-
-titleHighlighted,
-metaHighlighted,
-
 titleLength,
 metaLength,
-
-headingStructure,
-
 imageCount:images.length,
 imagesMissingAlt,
-
 totalLinks:links.length,
 internalLinks,
-
 canonical,
-
 suggestions
 
 }
