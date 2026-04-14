@@ -1,29 +1,41 @@
 function openTab(evt, tabName){
 
-document.querySelectorAll(".tab-content").forEach(tab=>{
-tab.style.display="none"
-})
+const tabcontent = document.getElementsByClassName("tab-content");
 
-document.querySelectorAll(".tab").forEach(btn=>{
-btn.classList.remove("active")
-})
+for (let i = 0; i < tabcontent.length; i++) {
+tabcontent[i].style.display = "none";
+}
 
-document.getElementById(tabName).style.display="block"
-evt.currentTarget.classList.add("active")
+const tabs = document.getElementsByClassName("tab");
+
+for (let i = 0; i < tabs.length; i++) {
+tabs[i].classList.remove("active");
+}
+
+document.getElementById(tabName).style.display = "block";
+
+if(evt){
+evt.currentTarget.classList.add("active");
+}
 
 }
 
 
 async function analyzeSEO(){
 
-const url=document.getElementById("urlInput").value
+const url=document.getElementById("urlInput").value;
 
-const html=await fetchHTML(url)
-const doc=parseHTML(html)
+if(!url){
+alert("Please enter URL");
+return;
+}
 
-const data=await analyzePage(doc,url)
+const html=await fetchHTML(url);
+const doc=parseHTML(html);
 
-displayResults(data)
+const data=await analyzePage(doc,url);
+
+displayResults(data);
 
 }
 
@@ -46,7 +58,7 @@ Overall SEO Score
 
 </div>
 
-`
+`;
 
 
 document.getElementById("meta").innerHTML=`
@@ -72,7 +84,7 @@ ${data.metaLength}/160 characters
 
 </div>
 
-`
+`;
 
 
 document.getElementById("headers").innerHTML=`
@@ -85,7 +97,7 @@ ${data.headingStructure}
 
 </div>
 
-`
+`;
 
 
 document.getElementById("images").innerHTML=`
@@ -113,7 +125,7 @@ ${data.imagesMissingAltList}
 
 </div>
 
-`
+`;
 
 
 document.getElementById("links").innerHTML=`
@@ -128,7 +140,7 @@ document.getElementById("links").innerHTML=`
 
 </div>
 
-`
+`;
 
 
 document.getElementById("technical").innerHTML=`
@@ -144,19 +156,26 @@ document.getElementById("technical").innerHTML=`
 
 </div>
 
-`
+`;
 
 
 document.getElementById("suggestions").innerHTML=`
 
 <div class="card">
 
-<h3>SEO Suggestions to Reach 100 Score</h3>
+<h3>SEO Suggestions</h3>
 
 ${data.suggestions}
 
 </div>
 
-`
+`;
 
 }
+
+
+/* show first tab on load */
+
+document.addEventListener("DOMContentLoaded", function(){
+openTab(null,"meta");
+});
