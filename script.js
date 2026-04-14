@@ -1,14 +1,14 @@
 function openTab(evt, tabName){
 
 document.querySelectorAll(".tab-content").forEach(tab=>{
-tab.classList.remove("active")
+tab.style.display="none"
 })
 
 document.querySelectorAll(".tab").forEach(btn=>{
 btn.classList.remove("active")
 })
 
-document.getElementById(tabName).classList.add("active")
+document.getElementById(tabName).style.display="block"
 evt.currentTarget.classList.add("active")
 
 }
@@ -33,8 +33,11 @@ function displayResults(data){
 document.getElementById("summary").innerHTML=`
 
 <div class="score-card">
+
 SEO Score
+
 <div class="score-number">${data.score}</div>
+
 </div>
 
 <div class="card">
@@ -42,13 +45,8 @@ SEO Score
 <h3>Meta Title</h3>
 <p>${data.title}</p>
 
-<p>${data.titleLength}/70</p>
-
 <h3>Meta Description</h3>
-
 <p>${data.meta}</p>
-
-<p>${data.metaLength}/160</p>
 
 </div>
 
@@ -76,7 +74,9 @@ document.getElementById("images").innerHTML=`
 
 <p>Total Images: ${data.imageCount}</p>
 
-<p>Missing ALT: ${data.imagesMissingAlt}</p>
+<p class="error">
+⚠ Missing ALT: ${data.imagesMissingAlt} (Urgent Fix Required)
+</p>
 
 <table>
 
