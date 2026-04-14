@@ -15,51 +15,35 @@
 
 <div class="container">
 
-<!-- Header -->
-
-<div class="hero">
-
 <h1>AI SEO Website Analyzer</h1>
 
-<p class="hero-credit">
+<p>
 Created by 
-<a href="https://www.linkedin.com/in/ankush-sable-6b903480/" 
-target="_blank" 
-class="branding-name">
+<a href="https://www.linkedin.com/in/ankush-sable-6b903480/" target="_blank">
 Ankush Sable
 </a>
 | Digital Marketing & SEO Expert
 </p>
 
-</div>
 
-
-<!-- Search Section -->
-
-<div class="search-section">
+<div class="search-wrapper">
 
 <input 
 type="text" 
 id="urlInput" 
-placeholder="Enter Website URL (Product / Blog / Page)"
+placeholder="Enter Website URL"
 class="search-bar"
 />
 
-<button 
-id="analyzeBtn" 
-class="analyze-btn">
+<button id="analyzeBtn" class="analyze-btn">
 Analyze Website
 </button>
 
 </div>
 
 
-<!-- SEO Score -->
-
 <div id="seoScore"></div>
 
-
-<!-- Tabs -->
 
 <div class="tabs">
 
@@ -90,36 +74,20 @@ SEO Suggestions
 </div>
 
 
-<!-- Tab Content -->
-
 <div id="meta" class="tab-content active"></div>
-
 <div id="headers" class="tab-content"></div>
-
 <div id="images" class="tab-content"></div>
-
 <div id="links" class="tab-content"></div>
-
 <div id="technical" class="tab-content"></div>
-
 <div id="suggestions" class="tab-content"></div>
 
-
-<!-- Scripts -->
 
 <script src="seo-analyzer.js"></script>
 <script src="script.js"></script>
 
 <script>
-
-document
-.getElementById("analyzeBtn")
-.addEventListener("click", analyzeSEO);
-
+document.getElementById("analyzeBtn").addEventListener("click", analyzeSEO);
 </script>
-
-
-</div>
 
 </body>
 
