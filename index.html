@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SEO Optimization Tool</title>
+<title>AI SEO Website Analyzer</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -15,15 +15,25 @@
 
 <div class="container">
 
-<!-- Hero Section -->
+<!-- Hero -->
 
 <div class="hero">
 
 <h1>AI SEO Website Analyzer</h1>
 
 <p class="hero-sub">
-Analyze your website SEO performance, detect issues, and get optimization suggestions instantly.
+Audit your website in seconds. Detect SEO issues. Improve rankings faster.
 </p>
+
+<div class="badges">
+
+<span>Meta Tags Audit</span>
+<span>Heading Structure</span>
+<span>Image Optimization</span>
+<span>Technical SEO</span>
+<span>Internal Links</span>
+
+</div>
 
 <p class="hero-credit">
 Created by 
@@ -36,7 +46,7 @@ Ankush Sable
 </div>
 
 
-<!-- Search Section -->
+<!-- Search -->
 
 <div class="search-section">
 
@@ -50,6 +60,30 @@ class="search-bar"
 <button id="analyzeBtn" class="analyze-btn">
 Analyze Website
 </button>
+
+<div class="examples">
+
+Try Example:
+
+<span onclick="fillExample('https://www.trulydesi.in')">
+trulydesi.in
+</span>
+
+<span onclick="fillExample('https://underarmour.in')">
+underarmour.in
+</span>
+
+</div>
+
+</div>
+
+
+<!-- Loading -->
+
+<div id="loading" class="loading">
+
+Analyzing Website...
+<div class="loader"></div>
 
 </div>
 
@@ -67,8 +101,6 @@ Analyze Website
 </div>
 
 
-<!-- Content Sections -->
-
 <div id="summary" class="tab-content active"></div>
 <div id="headers" class="tab-content"></div>
 <div id="images" class="tab-content"></div>
@@ -80,7 +112,24 @@ Analyze Website
 <script src="script.js"></script>
 
 <script>
-document.getElementById("analyzeBtn").addEventListener("click", analyzeSEO);
+
+document.getElementById("analyzeBtn").addEventListener("click", async function(){
+
+document.getElementById("loading").style.display="block"
+
+await analyzeSEO()
+
+document.getElementById("loading").style.display="none"
+
+})
+
+
+function fillExample(url){
+
+document.getElementById("urlInput").value=url
+
+}
+
 </script>
 
 </body>
