@@ -40,8 +40,6 @@ document.querySelector(".tab").click()
 
 function displayResults(data){
 
-/* SEO SCORE */
-
 document.getElementById("seoScore").innerHTML=`
 
 <div class="score-wrapper">
@@ -62,75 +60,21 @@ Overall SEO Score
 
 
 
-/* META TITLE + DESCRIPTION */
-
 document.getElementById("meta").innerHTML=`
 
-<div class="card">
-
 <h3>Meta Title</h3>
-
-<p>${data.titleHighlighted}</p>
-
-<div class="meta-stats">
-
-<span class="${data.titleLength>70?'red':'green'}">
-Characters: ${data.titleLength}/70
-</span>
-
-<span>
-Words: ${data.titleWords}
-</span>
-
-</div>
-
-
+<p>${data.title}</p>
 
 <h3>Meta Description</h3>
-
-<p>${data.metaHighlighted}</p>
-
-<div class="meta-stats">
-
-<span class="${data.metaLength>160?'red':'green'}">
-Characters: ${data.metaLength}/160
-</span>
-
-<span>
-Words: ${data.metaWords}
-</span>
-
-</div>
-
-</div>
+<p>${data.meta}</p>
 
 `
 
 
+document.getElementById("headers").innerHTML=data.headingStructure
 
-/* HEADERS */
-
-document.getElementById("headers").innerHTML=`
-
-<div class="card">
-
-<h3>Heading Structure</h3>
-
-${data.headingStructure}
-
-</div>
-
-`
-
-
-
-/* IMAGES */
 
 document.getElementById("images").innerHTML=`
-
-<div class="card">
-
-<h3>Images</h3>
 
 <p>Total Images: ${data.imageCount}</p>
 
@@ -141,7 +85,7 @@ Missing ALT: ${data.imagesMissingAlt}
 <table>
 
 <tr>
-<th>Image URL</th>
+<th>Image</th>
 <th>Suggested ALT</th>
 </tr>
 
@@ -149,66 +93,28 @@ ${data.imagesMissingAltList}
 
 </table>
 
-</div>
-
 `
 
-
-
-/* LINKS */
 
 document.getElementById("links").innerHTML=`
 
-<div class="card">
-
-<h3>Links</h3>
-
 <p>Total Links: ${data.totalLinks}</p>
-
 <p>Internal Links: ${data.internalLinks}</p>
-
 <p>External Links: ${data.externalLinks}</p>
-
-</div>
 
 `
 
-
-
-/* TECHNICAL */
 
 document.getElementById("technical").innerHTML=`
 
-<div class="card">
-
-<h3>Technical SEO</h3>
-
 <p>Canonical: ${data.canonical}</p>
-
 <p>Robots: ${data.robots}</p>
-
 <p>Schema: ${data.schema}</p>
-
 <p>Sitemap: ${data.sitemap}</p>
 
-</div>
-
 `
 
 
-
-/* SEO SUGGESTIONS */
-
-document.getElementById("suggestions").innerHTML=`
-
-<div class="card">
-
-<h3>SEO Suggestions to Reach 100 Score</h3>
-
-${data.suggestions}
-
-</div>
-
-`
+document.getElementById("suggestions").innerHTML=data.suggestions
 
 }
