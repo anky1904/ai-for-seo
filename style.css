@@ -10,41 +10,20 @@ padding:25px;
 border-radius:10px;
 max-width:1100px;
 margin:auto;
-box-shadow:0 4px 20px rgba(0,0,0,0.08);
 }
 
-.branding-header{
-margin-bottom:20px;
-padding-bottom:15px;
-border-bottom:1px solid #eee;
-}
-
-.branding-name{
-background:linear-gradient(90deg,#2563eb,#9333ea);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-font-weight:700;
-}
-
-input{
-width:100%;
-padding:12px;
-margin:15px 0;
-border-radius:6px;
-border:1px solid #ddd;
-}
-
-button{
-padding:12px 20px;
-background:linear-gradient(90deg,#2563eb,#9333ea);
+.analyze-btn{
+background:linear-gradient(90deg,#ff512f,#dd2476);
 color:white;
+padding:12px 20px;
 border:none;
-border-radius:6px;
-cursor:pointer;
+border-radius:8px;
 font-weight:600;
+cursor:pointer;
+transition:0.2s;
 }
 
-button:hover{
+.analyze-btn:hover{
 transform:scale(1.05);
 }
 
@@ -52,47 +31,37 @@ transform:scale(1.05);
 
 .tabs{
 display:flex;
-gap:12px;
-margin:25px 0;
-flex-wrap:wrap;
+gap:10px;
+margin:20px 0;
 }
 
 .tab{
-padding:10px 20px;
-background:linear-gradient(90deg,#2563eb,#9333ea);
-color:white;
+padding:10px 18px;
 border:none;
+background:#e5e7eb;
 border-radius:8px;
 cursor:pointer;
-opacity:0.6;
 transition:0.2s;
 }
 
-.tab:hover{
-opacity:1;
-transform:scale(1.08);
-}
-
 .tab.active{
-opacity:1;
-transform:scale(1.08);
+background:linear-gradient(90deg,#2563eb,#9333ea);
+color:white;
 }
 
-.tab-content{
-display:none;
-margin-top:20px;
+.tab:hover{
+transform:scale(1.05);
 }
 
-.tab-content.active{
-display:block;
-}
+
+/* Cards */
 
 .card{
 background:white;
 padding:20px;
 border-radius:8px;
+margin-top:15px;
 box-shadow:0 2px 10px rgba(0,0,0,0.05);
-margin-bottom:20px;
 }
 
 .score-card{
@@ -100,28 +69,39 @@ background:linear-gradient(90deg,#2563eb,#9333ea);
 color:white;
 padding:20px;
 border-radius:10px;
-text-align:center;
 margin-bottom:20px;
 }
 
 .score-number{
-font-size:40px;
+font-size:32px;
 font-weight:bold;
 }
 
+/* Header colors */
+
+.h1{
+color:#2563eb;
+font-weight:bold;
+}
+
+.h2{
+color:#7c3aed;
+font-weight:bold;
+}
+
+.h3{
+color:#374151;
+font-weight:bold;
+}
+
+/* Error */
+
 .error{
 color:red;
-font-weight:600;
+font-weight:bold;
 }
 
-.good{
-color:green;
-font-weight:600;
-}
-
-.footer{
-margin-top:30px;
-padding-top:20px;
-border-top:1px solid #eee;
-text-align:center;
+.warning{
+color:#f59e0b;
+font-weight:bold;
 }
