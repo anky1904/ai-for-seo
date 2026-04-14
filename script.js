@@ -1,21 +1,20 @@
 function openTab(evt, tabName){
 
-const tabcontent = document.getElementsByClassName("tab-content");
+const tabs=document.querySelectorAll(".tab")
+const contents=document.querySelectorAll(".tab-content")
 
-for (let i = 0; i < tabcontent.length; i++) {
-tabcontent[i].style.display = "none";
-}
+tabs.forEach(tab=>{
+tab.classList.remove("active")
+})
 
-const tabs = document.getElementsByClassName("tab");
+contents.forEach(content=>{
+content.style.display="none"
+})
 
-for (let i = 0; i < tabs.length; i++) {
-tabs[i].classList.remove("active");
-}
-
-document.getElementById(tabName).style.display = "block";
+document.getElementById(tabName).style.display="block"
 
 if(evt){
-evt.currentTarget.classList.add("active");
+evt.currentTarget.classList.add("active")
 }
 
 }
@@ -23,19 +22,33 @@ evt.currentTarget.classList.add("active");
 
 async function analyzeSEO(){
 
-const url=document.getElementById("urlInput").value;
+const url=document.getElementById("urlInput").value
 
 if(!url){
-alert("Please enter URL");
-return;
+alert("Enter Website URL")
+return
 }
 
-const html=await fetchHTML(url);
-const doc=parseHTML(html);
+const html=await fetchHTML(url)
+const doc=parseHTML(html)
 
-const data=await analyzePage(doc,url);
+const data=await analyzePage(doc,url)
 
-displayResults(data);
+displayResults(data)
+
+/* Highlight Meta Tab After Analysis */
+
+document.querySelectorAll(".tab").forEach(tab=>{
+tab.classList.remove("active")
+})
+
+document.querySelector(".tab").classList.add("active")
+
+document.querySelectorAll(".tab-content").forEach(content=>{
+content.style.display="none"
+})
+
+document.getElementById("meta").style.display="block"
 
 }
 
@@ -58,7 +71,7 @@ Overall SEO Score
 
 </div>
 
-`;
+`
 
 
 document.getElementById("meta").innerHTML=`
@@ -84,7 +97,7 @@ ${data.metaLength}/160 characters
 
 </div>
 
-`;
+`
 
 
 document.getElementById("headers").innerHTML=`
@@ -97,7 +110,7 @@ ${data.headingStructure}
 
 </div>
 
-`;
+`
 
 
 document.getElementById("images").innerHTML=`
@@ -125,7 +138,7 @@ ${data.imagesMissingAltList}
 
 </div>
 
-`;
+`
 
 
 document.getElementById("links").innerHTML=`
@@ -140,7 +153,7 @@ document.getElementById("links").innerHTML=`
 
 </div>
 
-`;
+`
 
 
 document.getElementById("technical").innerHTML=`
@@ -156,26 +169,19 @@ document.getElementById("technical").innerHTML=`
 
 </div>
 
-`;
+`
 
 
 document.getElementById("suggestions").innerHTML=`
 
 <div class="card">
 
-<h3>SEO Suggestions</h3>
+<h3>SEO Suggestions to Reach 100 Score</h3>
 
 ${data.suggestions}
 
 </div>
 
-`;
+`
 
 }
-
-
-/* show first tab on load */
-
-document.addEventListener("DOMContentLoaded", function(){
-openTab(null,"meta");
-});
