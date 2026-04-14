@@ -8,7 +8,7 @@ padding:30px;
 background:white;
 padding:25px;
 border-radius:10px;
-max-width:1000px;
+max-width:1100px;
 margin:auto;
 box-shadow:0 4px 20px rgba(0,0,0,0.08);
 }
@@ -42,7 +42,6 @@ border:none;
 border-radius:6px;
 cursor:pointer;
 font-weight:600;
-transition:0.2s;
 }
 
 button:hover{
@@ -60,25 +59,22 @@ flex-wrap:wrap;
 
 .tab{
 padding:10px 20px;
+background:linear-gradient(90deg,#2563eb,#9333ea);
+color:white;
 border:none;
-background:linear-gradient(90deg,#e0e7ff,#ede9fe);
-cursor:pointer;
 border-radius:8px;
-font-weight:600;
-transition:0.25s;
-color:#333;
+cursor:pointer;
+opacity:0.6;
+transition:0.2s;
 }
 
 .tab:hover{
+opacity:1;
 transform:scale(1.08);
-background:linear-gradient(90deg,#2563eb,#9333ea);
-color:white;
-box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }
 
 .tab.active{
-background:linear-gradient(90deg,#2563eb,#9333ea);
-color:white;
+opacity:1;
 transform:scale(1.08);
 }
 
@@ -91,29 +87,12 @@ margin-top:20px;
 display:block;
 }
 
-/* Cards */
-
 .card{
 background:white;
 padding:20px;
-border-radius:10px;
+border-radius:8px;
 box-shadow:0 2px 10px rgba(0,0,0,0.05);
-margin-bottom:15px;
-}
-
-.good{
-color:green;
-font-weight:600;
-}
-
-.warning{
-color:#f59e0b;
-font-weight:600;
-}
-
-.error{
-color:red;
-font-weight:600;
+margin-bottom:20px;
 }
 
 .score-card{
@@ -121,8 +100,8 @@ background:linear-gradient(90deg,#2563eb,#9333ea);
 color:white;
 padding:20px;
 border-radius:10px;
-margin-bottom:20px;
 text-align:center;
+margin-bottom:20px;
 }
 
 .score-number{
@@ -130,10 +109,19 @@ font-size:40px;
 font-weight:bold;
 }
 
+.error{
+color:red;
+font-weight:600;
+}
+
+.good{
+color:green;
+font-weight:600;
+}
+
 .footer{
 margin-top:30px;
 padding-top:20px;
 border-top:1px solid #eee;
 text-align:center;
-color:#666;
 }
